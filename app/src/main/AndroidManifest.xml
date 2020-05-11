@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_gestmans_purple_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Interface.QRScannerActivity"></activity>
+        <activity android:name=".Interface.HomeActivity"></activity>
+        <activity android:name=".Interface.QRScannerActivity" />
         <activity
             android:name=".Interface.LoginActivity"
             android:windowSoftInputMode="adjustUnspecified">
