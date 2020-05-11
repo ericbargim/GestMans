@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     TextInputEditText etLogin, etPassword;
     Button btnLogin, btnLoginQR;
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         references();
 
         //When user clicks Login button
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void references() {
+        //Reference all the XML elements
         etLogin = findViewById(R.id.etLogin);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
