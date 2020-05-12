@@ -1,4 +1,4 @@
-package com.gestmans.Interface;
+package com.gestmans.Interface.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +8,9 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +31,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         references();
+
+        //This is needed to apply the font of the app to the password field
+        Typeface cache = etPassword.getTypeface();
+        etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        etPassword.setTypeface(cache);
 
         //When user clicks Login button
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +111,8 @@ public class LoginActivity extends AppCompatActivity {
             if (DataClass.password != null) {
                 Log.d("LOGIN-ACTIVITY", "Checking password...");
                 //Attempt login
-
+                Bundle bundle = new Bundle();
+                bundle.putString("name", null);
                 DataClass.password = null;
             }
         } catch (NullPointerException ex) {

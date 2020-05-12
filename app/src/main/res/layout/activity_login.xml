@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient"
     android:fillViewport="true"
-    tools:context=".Interface.LoginActivity">
+    tools:context=".Interface.Activities.LoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -22,7 +22,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/LOGO_DESCRIPTION" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
@@ -49,7 +50,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:hint="Username"
+            android:hint="@string/LOGIN_USERNAME"
             android:textColorHint="@color/lighterGrey"
             app:layout_constraintBottom_toTopOf="@+id/tilPassword"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +81,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:hint="Password"
+            android:hint="@string/LOGIN_PASSWORD"
             android:textColorHint="@color/lighterGrey"
             app:layout_constraintBottom_toTopOf="@+id/guideFieldsBtnLogin"
             app:layout_constraintStart_toStartOf="parent"
@@ -92,7 +93,6 @@
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:drawableStart="@drawable/ic_password"
@@ -127,8 +127,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:background="@drawable/button_round"
-            android:text="Login"
+            android:background="@drawable/component_round"
+            android:text="@string/LOGIN_LOGIN"
             android:textColor="@color/darkGrey"
             app:layout_constraintBottom_toTopOf="@+id/guideBtnLoginBtnLoginQR"
             app:layout_constraintEnd_toEndOf="parent"
@@ -142,8 +142,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:background="@drawable/button_round"
-            android:text="Login with QR"
+            android:background="@drawable/component_round"
+            android:text="@string/LOGIN_LOGIN_QR"
             android:textColor="@color/darkGrey"
             app:layout_constraintBottom_toTopOf="@+id/barrier"
             app:layout_constraintEnd_toEndOf="parent"

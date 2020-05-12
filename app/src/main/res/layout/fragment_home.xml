@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purpleGradient"
-    tools:context=".Interface.HomeActivity">
+    tools:context=".Interface.Activities.AppMainActivity">
 
     <TextView
-        android:id="@+id/tvUsername"
+        android:id="@+id/tvWelcomeName"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="end|center_vertical"
-        android:text="Welcome, user"
+        android:text="@string/HOME_WELCOME_HOLDER"
         android:textColor="@color/white"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guideUser"
@@ -22,8 +22,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
     <androidx.cardview.widget.CardView
-        android:id="@+id/cvAdd"
+        android:id="@+id/cvNewOrder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_rowWeight="1"
@@ -52,14 +59,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-
                 android:src="@drawable/ic_add"
                 android:tint="@color/purpleGradient" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Order"
+                android:text="@string/HOME_NEW_ORDER"
                 android:textAlignment="center"
                 android:textColor="@color/purpleGradient"
                 android:textSize="18sp"
@@ -67,8 +73,15 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideNewOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
     <androidx.cardview.widget.CardView
-        android:id="@+id/cvEdit"
+        android:id="@+id/cvEditOrder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_rowWeight="1"
@@ -101,13 +114,27 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit Order"
+                android:text="@string/HOME_EDIT_ORDER"
                 android:textAlignment="center"
                 android:textColor="@color/purpleGradient"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideEditOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvLogOut"
@@ -143,39 +170,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Log Out"
+                android:text="@string/HOME_LOG_OUT"
                 android:textAlignment="center"
                 android:textColor="@color/purpleGradient"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideNewOrder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideEditOrder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideLogOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.gestmans.Interface;
+package com.gestmans.Interface.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 

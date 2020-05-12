@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">GestMans</string>
+
+    <!--region LOGIN_STRINGS-->
+    <string name="LOGIN_USERNAME">Username</string>
+    <string name="LOGIN_PASSWORD">Password</string>
+    <string name="LOGIN_LOGIN">Login</string>
+    <string name="LOGIN_LOGIN_QR">Login with QR</string>
+    <!--endregion-->
+
+    <!--region HOME_STRINGS-->
+    <string name="HOME_WELCOME_FILL">Welcome, %s</string>
+    <string name="HOME_WELCOME_HOLDER">Welcome</string>
+    <string name="HOME_NEW_ORDER">New Order</string>
+    <string name="HOME_EDIT_ORDER">Edit Order</string>
+    <string name="HOME_LOG_OUT">Log Out</string>
+    <!--endregion-->
+
+    <!--region COMMON_STRINGS-->
+    <string name="LOGO_DESCRIPTION">GestMans logo</string>
+    <!--endregion-->
+
 </resources>
