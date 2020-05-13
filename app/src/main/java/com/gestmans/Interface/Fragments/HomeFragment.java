@@ -16,8 +16,8 @@ import com.gestmans.R;
 
 public class HomeFragment extends Fragment {
 
-    TextView tvWelcomeName;
-    CardView cvNewOrder, cvEditOrder, cvLogOut;
+    private TextView tvWelcomeName;
+    private CardView cvNewOrder, cvEditOrder, cvLogOut;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -26,41 +26,43 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         final View fView = inflater.inflate(R.layout.fragment_home, container, false);
         references(fView);
         try {
             String name = getArguments().getString("name");
             tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, name));
         } catch (NullPointerException ex) {
-            tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, "User"));
+            tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, getString(R.string.HOME_WELCOME_HOLDER_USER)));
         }
 
         cvNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragmentViewLayout, new NewOrderTableFragment()).addToBackStack(null).commit();
+                        .replace(R.id.fragmentViewLayout, new NewOrderTablesFragment()).addToBackStack(null).commit();
             }
         });
         cvEditOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                        .replace(R.id.fragmentViewLayout, new EditOrderTablesFragment()).addToBackStack(null).commit();
             }
         });
         cvLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Log out")
-                        .setMessage("Are you sure you want to log out?")
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setTitle(getString(R.string.LOG_OUT))
+                        .setMessage(getString(R.string.HOME_CONFIRM_LOG_OUT))
+                        .setNegativeButton(getString(R.string.NO), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
                             }
                         })
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.YES), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 getActivity().finish();

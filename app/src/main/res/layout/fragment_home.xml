@@ -65,7 +65,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/HOME_NEW_ORDER"
+                android:text="@string/NEW_ORDER"
                 android:textAlignment="center"
                 android:textColor="@color/purpleGradient"
                 android:textSize="18sp"
@@ -114,7 +114,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/HOME_EDIT_ORDER"
+                android:text="@string/EDIT_ORDER"
                 android:textAlignment="center"
                 android:textColor="@color/purpleGradient"
                 android:textSize="18sp"
@@ -170,7 +170,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/HOME_LOG_OUT"
+                android:text="@string/LOG_OUT"
                 android:textAlignment="center"
                 android:textColor="@color/purpleGradient"
                 android:textSize="18sp"

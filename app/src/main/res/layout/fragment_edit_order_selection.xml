@@ -8,36 +8,36 @@
     tools:context=".Interface.Fragments.NewOrderTablesFragment">
 
     <TextView
-        android:id="@+id/tvTitleNewSelection"
+        android:id="@+id/tvTitleEditSelection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:gravity="center"
-        android:text="@string/NEW_ORDER"
+        android:text="@string/EDIT_ORDER"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/llDishDismissNew"
+        app:layout_constraintBottom_toTopOf="@+id/llDishDismissEdit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/llDishDismissNew"
+        android:id="@+id/llDishDismissEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/lvDishesNew"
+        app:layout_constraintBottom_toTopOf="@+id/lvDishesEdit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitleNewSelection">
+        app:layout_constraintTop_toBottomOf="@+id/tvTitleEditSelection">
 
         <Spinner
-            android:id="@+id/spDishTypeNew"
+            android:id="@+id/spDishTypeEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -45,7 +45,7 @@
             android:backgroundTint="@color/white" />
 
         <Button
-            android:id="@+id/btnDismissSelectionNew"
+            android:id="@+id/btnDismissSelectionEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|center_vertical"
@@ -57,7 +57,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/lvDishesNew"
+        android:id="@+id/lvDishesEdit"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
@@ -66,13 +66,13 @@
         android:layout_marginBottom="10dp"
         android:background="@drawable/component_round"
         android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/lvTicketNew"
+        app:layout_constraintBottom_toTopOf="@+id/lvTicketEdit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llDishDismissNew" />
+        app:layout_constraintTop_toBottomOf="@+id/llDishDismissEdit" />
 
     <ListView
-        android:id="@+id/lvTicketNew"
+        android:id="@+id/lvTicketEdit"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
@@ -81,23 +81,23 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/component_round"
         android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnCreateTicket"
+        app:layout_constraintBottom_toTopOf="@+id/btnModifyTicket"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvDishesNew" />
+        app:layout_constraintTop_toBottomOf="@+id/lvDishesEdit" />
 
     <Button
-        android:id="@+id/btnCreateTicket"
+        android:id="@+id/btnModifyTicket"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/component_round"
-        android:text="@string/NEW_ORDER_SELECTION_CREATE_TICKET"
+        android:text="@string/EDIT_ORDER_SELECTION_MODIFY_TICKET"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvTicketNew" />
+        app:layout_constraintTop_toBottomOf="@+id/lvTicketEdit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

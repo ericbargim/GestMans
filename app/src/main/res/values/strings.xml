@@ -6,18 +6,65 @@
     <string name="LOGIN_PASSWORD">Password</string>
     <string name="LOGIN_LOGIN">Login</string>
     <string name="LOGIN_LOGIN_QR">Login with QR</string>
+    <string name="LOGIN_ERROR_USERNAME">Please, enter a valid username!</string>
+    <string name="LOGIN_ERROR_PASSWORD">Please, enter a valid password!</string>
+    <!--endregion-->
+
+    <!--region APP_MAIN_STRINGS-->
+    <string name="APP_MAIN_BACK_AGAIN">Press back again to log out</string>
     <!--endregion-->
 
     <!--region HOME_STRINGS-->
     <string name="HOME_WELCOME_FILL">Welcome, %s</string>
     <string name="HOME_WELCOME_HOLDER">Welcome</string>
-    <string name="HOME_NEW_ORDER">New Order</string>
-    <string name="HOME_EDIT_ORDER">Edit Order</string>
-    <string name="HOME_LOG_OUT">Log Out</string>
+    <string name="HOME_CONFIRM_LOG_OUT">Are you sure you want to log out?</string>
+    <string name="HOME_WELCOME_HOLDER_USER">User</string>
+    <!--endregion-->
+
+    <!--region NEW_ORDER_COMMON_STRINGS-->
+    <!--endregion-->
+
+    <!--region NEW_ORDER_TABLE_STRINGS-->
+
+    <!--endregion-->
+
+    <!--region NEW_ORDER_SELECTION_STRINGS-->
+    <string name="NEW_ORDER_SELECTION_CREATE_TICKET">Create Ticket</string>
+    <string name="NEW_ORDER_SELECTION_CONFIRM_DISMISS">Are you sure you want to dismiss this order?</string>
+    <!--endregion-->
+
+    <!--region EDIT_ORDER_COMMON_STRINGS-->
+    <!--endregion-->
+
+    <!--region EDIT_ORDER_SELECTION_STRINGS-->
+    <string name="EDIT_ORDER_SELECTION_MODIFY_TICKET">Modify Ticket</string>
+    <string name="EDIT_ORDER_SELECTION_CONFIRM_DISMISS">Are you sure you want to dismiss the modification of this order?</string>
+    <!--endregion-->
+
+    <!--region ORDER_COMMON_STRINGS-->
+    <string name="ORDER_TABLES_NO_TABLES">No tables were found.</string>
+    <string name="ORDER_SELECTION_SPINNER_HINT">Dish type</string>
+    <!--endregion-->
+
+    <!--region PERMISSIONS_STRINGS-->
+    <string name="PERMISSION_GRANTED">Permission granted</string>
+    <string name="PERMISSION_DENIED">Permission denied</string>
+    <!--endregion-->
+
+    <!--region ACTIVITIES_STRINGS-->
+    <string name="LOGIN_ACTIVITY">LOGIN-ACTIVITY</string>
+    <string name="QR_SCANNER_ACTIVITY">QR_SCANNER-ACTIVITY</string>
+    <string name="FETCH_PHP_CLASS">QR_SCANNER-ACTIVITY</string>
     <!--endregion-->
 
     <!--region COMMON_STRINGS-->
     <string name="LOGO_DESCRIPTION">GestMans logo</string>
+    <string name="DISMISS">Dismiss</string>
+    <string name="YES">Yes</string>
+    <string name="NO">No</string>
+    <string name="NEW_ORDER">New Order</string>
+    <string name="EDIT_ORDER">Edit Order</string>
+    <string name="LOG_OUT">Log Out</string>
     <!--endregion-->
 
 </resources>

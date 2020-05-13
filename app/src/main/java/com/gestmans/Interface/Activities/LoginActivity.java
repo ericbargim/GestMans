@@ -23,8 +23,8 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class LoginActivity extends AppCompatActivity {
 
-    TextInputEditText etLogin, etPassword;
-    Button btnLogin, btnLoginQR;
+    private TextInputEditText etLogin, etPassword;
+    private Button btnLogin, btnLoginQR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +43,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Check if Login EditText is empty
                 if (etLogin.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(), "Please, enter a valid username!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.LOGIN_ERROR_USERNAME), Toast.LENGTH_SHORT).show();
                 }
                 //Check if Password EditText is empty
                 else if (etPassword.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(), "Please, enter a valid password!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.LOGIN_ERROR_PASSWORD), Toast.LENGTH_SHORT).show();
                 }
                 //All EditText fields are not empty
                 else {
@@ -87,10 +87,10 @@ public class LoginActivity extends AppCompatActivity {
         //Check if camera permission is granted or not
         if (requestCode == Permissions.CAMERA_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(LoginActivity.this, "Permission granted.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.PERMISSION_GRANTED), Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), QRScannerActivity.class));
             } else {
-                Toast.makeText(LoginActivity.this, "Permission denied.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.PERMISSION_DENIED), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -106,10 +106,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("LOGIN-ACTIVITY", "Resuming Login");
+        Log.d(getString(R.string.LOGIN_ACTIVITY), "Resuming Login");
         try {
             if (DataClass.password != null) {
-                Log.d("LOGIN-ACTIVITY", "Checking password...");
+                Log.d(getString(R.string.LOGIN_ACTIVITY), "Checking password...");
                 //Attempt login
                 Bundle bundle = new Bundle();
                 bundle.putString("name", null);

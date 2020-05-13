@@ -12,7 +12,7 @@ import com.gestmans.R;
 
 public class AppMainActivity extends AppCompatActivity {
 
-    FrameLayout fragmentView;
+    private FrameLayout fragmentView;
 
     private boolean doubleBackToExitPressedOnce = false;
 
@@ -34,7 +34,7 @@ public class AppMainActivity extends AppCompatActivity {
                 return;
             } else {
                 this.doubleBackToExitPressedOnce = true;
-                Toast.makeText(this, "Press back again to log out", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.APP_MAIN_BACK_AGAIN), Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

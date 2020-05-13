@@ -9,23 +9,19 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.gestmans.R;
 
-import java.util.ArrayList;
-
-public class NewOrderSelectionFragment extends Fragment {
+public class EditOrderSelectionFragment extends Fragment {
 
     private Spinner spDishType;
     private Button btnDismiss, btnCreateTicket;
     private ListView lvDishes, lvTicket;
 
-    public NewOrderSelectionFragment() {
+    public EditOrderSelectionFragment() {
         // Required empty public constructor
     }
 
@@ -35,29 +31,12 @@ public class NewOrderSelectionFragment extends Fragment {
         // Inflate the layout for this fragment
         final View fView = inflater.inflate(R.layout.fragment_new_order_selection, container, false);
         references(fView);
-        ArrayList<String> al = new ArrayList<>();
-        ArrayAdapter<String> adapterInit;
-        adapterInit = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, al);
-        adapterInit.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spDishType.setAdapter(adapterInit);
-        spDishType.setPrompt(getString(R.string.ORDER_SELECTION_SPINNER_HINT));
-        spDishType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         btnDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(getString(R.string.NEW_ORDER))
-                        .setMessage(getString(R.string.NEW_ORDER_SELECTION_CONFIRM_DISMISS))
+                builder.setTitle(getString(R.string.EDIT_ORDER))
+                        .setMessage(getString(R.string.EDIT_ORDER_SELECTION_CONFIRM_DISMISS))
                         .setNegativeButton(getString(R.string.NO), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -82,10 +61,10 @@ public class NewOrderSelectionFragment extends Fragment {
     }
 
     private void references(View fView) {
-        spDishType = fView.findViewById(R.id.spDishTypeNew);
-        btnDismiss = fView.findViewById(R.id.btnDismissSelectionNew);
-        lvDishes = fView.findViewById(R.id.lvDishesNew);
-        lvTicket = fView.findViewById(R.id.lvTicketNew);
-        btnCreateTicket = fView.findViewById(R.id.btnCreateTicket);
+        spDishType = fView.findViewById(R.id.spDishTypeEdit);
+        btnDismiss = fView.findViewById(R.id.btnDismissSelectionEdit);
+        lvDishes = fView.findViewById(R.id.lvDishesEdit);
+        lvTicket = fView.findViewById(R.id.lvTicketEdit);
+        btnCreateTicket = fView.findViewById(R.id.btnModifyTicket);
     }
 }
