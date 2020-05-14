@@ -38,12 +38,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/tilLogin"
+            app:layout_constraintBottom_toTopOf="@+id/ilLogin"
             app:layout_constraintGuide_percent="0.5"
             app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilLogin"
+            android:id="@+id/ilLogin"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,9 +52,10 @@
             android:layout_marginEnd="40dp"
             android:hint="@string/LOGIN_USERNAME"
             android:textColorHint="@color/lighterGrey"
-            app:layout_constraintBottom_toTopOf="@+id/tilPassword"
+            app:errorEnabled="true"
+            app:layout_constraintBottom_toTopOf="@+id/ilPassword"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/guideLogoFields">
 
@@ -62,11 +63,11 @@
                 android:id="@+id/etLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_person"
+                android:drawablePadding="10dp"
                 android:inputType="text"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:drawableStart="@drawable/ic_person"
-                android:drawablePadding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -74,7 +75,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilPassword"
+            android:id="@+id/ilPassword"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,10 +83,11 @@
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             android:hint="@string/LOGIN_PASSWORD"
+            app:errorEnabled="true"
             android:textColorHint="@color/lighterGrey"
             app:layout_constraintBottom_toTopOf="@+id/guideFieldsBtnLogin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilLogin"
+            app:layout_constraintTop_toBottomOf="@+id/ilLogin"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/white">
 
@@ -110,7 +112,7 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/btnLogin"
             app:layout_constraintGuide_percent="0.785"
-            app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/ilPassword" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideBtnLoginBtnLoginQR"

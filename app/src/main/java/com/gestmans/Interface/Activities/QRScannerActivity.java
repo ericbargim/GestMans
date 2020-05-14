@@ -25,9 +25,11 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
     @Override
     public void handleResult(Result result) {
         //When scanner detects a QR code, send the data and press back button
-        DataClass.password = result.getText();
+        LoginActivity.postQRLogin(result.getText());
         onBackPressed();
     }
+
+
 
     @Override
     protected void onPause() {

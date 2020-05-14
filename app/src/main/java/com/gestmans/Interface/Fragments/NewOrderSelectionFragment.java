@@ -15,9 +15,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.gestmans.Business.fetchDataPHP;
 import com.gestmans.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class NewOrderSelectionFragment extends Fragment {
 
@@ -35,7 +39,16 @@ public class NewOrderSelectionFragment extends Fragment {
         // Inflate the layout for this fragment
         final View fView = inflater.inflate(R.layout.fragment_new_order_selection, container, false);
         references(fView);
-        ArrayList<String> al = new ArrayList<>();
+        String data = "";
+        try {
+            data = new fetchDataPHP().execute("get_dish_type").get();
+            System.out.println(data);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        String[] dishTypes = data.split("-");
+        List<String> al = new ArrayList<>();
+        al = Arrays.asList(dishTypes);
         ArrayAdapter<String> adapterInit;
         adapterInit = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, al);
         adapterInit.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

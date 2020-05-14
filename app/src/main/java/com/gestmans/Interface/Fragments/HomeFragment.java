@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.gestmans.Business.DataClass;
 import com.gestmans.R;
 
 public class HomeFragment extends Fragment {
@@ -29,13 +30,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         final View fView = inflater.inflate(R.layout.fragment_home, container, false);
         references(fView);
-        try {
-            String name = getArguments().getString("name");
-            tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, name));
-        } catch (NullPointerException ex) {
-            tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, getString(R.string.HOME_WELCOME_HOLDER_USER)));
-        }
-
+        if (DataClass.username.equals("error")) tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, DataClass.username));
+        else tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, getString(R.string.HOME_WELCOME_HOLDER_USER)));
         cvNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +65,6 @@ public class HomeFragment extends Fragment {
                             }
                         })
                         .create();
-
                 final AlertDialog dialog = builder.show();
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));
                 dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));

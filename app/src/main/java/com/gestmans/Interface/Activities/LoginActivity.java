@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -18,20 +19,27 @@ import android.widget.Toast;
 
 import com.gestmans.Business.DataClass;
 import com.gestmans.Business.Permissions;
+import com.gestmans.Business.fetchDataPHP;
 import com.gestmans.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private TextInputLayout ilLogin, ilPassowrd;
     private TextInputEditText etLogin, etPassword;
     private Button btnLogin, btnLoginQR;
+
+    private static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mContext = this;
         references();
-
         //This is needed to apply the font of the app to the password field
         Typeface cache = etPassword.getTypeface();
         etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -53,6 +61,23 @@ public class LoginActivity extends AppCompatActivity {
                 else {
                     String username = etLogin.getText().toString();
                     String password = etPassword.getText().toString();
+
+                    try {
+                        if (Integer.parseInt(new fetchDataPHP().execute("username_exist", username).get()) > 0) {
+                            Log.d(getString(R.string.LOGIN_ACTIVITY), "Username exist. Checking password.");
+                            if (Integer.parseInt(new fetchDataPHP().execute("username_password_matches", username, password).get()) > 0) {
+                                Log.d(getString(R.string.LOGIN_ACTIVITY), "Password matches.");
+                                DataClass.username = new fetchDataPHP().execute("get_name_lastname", username).get();
+                                startActivity(new Intent(getApplicationContext(), AppMainActivity.class));
+                            } else {
+                                Log.d(getString(R.string.LOGIN_ACTIVITY), "Password does not match.");
+                            }
+                        } else {
+                            Log.d(getString(R.string.LOGIN_ACTIVITY), "Username does not exist.");
+                        }
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -72,6 +97,25 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public static void postQRLogin(String qr) {
+        try {
+            Log.d(/*Resources.getSystem().getString(R.string.LOGIN_ACTIVITY)*/"LOGIN", "QR received: " + qr + ".");
+            int i = Integer.parseInt(new fetchDataPHP().execute("qr_code_exist", qr).get());
+            System.out.println(i);
+            if (Integer.parseInt(new fetchDataPHP().execute("qr_code_exist", qr).get()) > 0) {
+                Log.d(/*Resources.getSystem().getString(R.string.LOGIN_ACTIVITY)*/"LOGIN", "QR exist.");
+                DataClass.username = new fetchDataPHP().execute("get_name_lastname", qr).get();
+                mContext.startActivity(new Intent(mContext, AppMainActivity.class));
+            } else {
+                Log.d(/*Resources.getSystem().getString(R.string.LOGIN_ACTIVITY)*/"LOGIN", "QR does not exist.");
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void requestCameraPermission() {
@@ -97,26 +141,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void references() {
         //Reference all the XML elements
+        ilLogin = findViewById(R.id.ilLogin);
         etLogin = findViewById(R.id.etLogin);
+        ilPassowrd = findViewById(R.id.ilPassword);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnLoginQR = findViewById(R.id.btnLoginQR);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(getString(R.string.LOGIN_ACTIVITY), "Resuming Login");
-        try {
-            if (DataClass.password != null) {
-                Log.d(getString(R.string.LOGIN_ACTIVITY), "Checking password...");
-                //Attempt login
-                Bundle bundle = new Bundle();
-                bundle.putString("name", null);
-                DataClass.password = null;
-            }
-        } catch (NullPointerException ex) {
-
-        }
     }
 }

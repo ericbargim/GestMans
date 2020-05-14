@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.gestmans.Interface.Fragments.HomeFragment;
@@ -12,15 +11,12 @@ import com.gestmans.R;
 
 public class AppMainActivity extends AppCompatActivity {
 
-    private FrameLayout fragmentView;
-
     private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_main);
-        fragmentView = findViewById(R.id.fragmentViewLayout);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentViewLayout, new HomeFragment()).commit();
         }
