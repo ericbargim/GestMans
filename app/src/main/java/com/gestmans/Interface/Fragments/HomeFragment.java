@@ -1,6 +1,5 @@
 package com.gestmans.Interface.Fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -29,47 +28,51 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View fView = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // Reference the elements from the XML layout
         references(fView);
-        if (DataClass.username.equals("error")) tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, DataClass.username));
-        else tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, getString(R.string.HOME_WELCOME_HOLDER_USER)));
-        cvNewOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragmentViewLayout, new NewOrderTablesFragment()).addToBackStack(null).commit();
-            }
+
+        // Set TextView welcome text
+        tvWelcomeName.setText(getString(R.string.HOME_WELCOME_FILL, DataClass.username));
+
+        // If NewOrder CardView is clicked
+        cvNewOrder.setOnClickListener(v -> {
+            // Go to NewOrderFragment
+            getFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                    .replace(R.id.fragmentViewLayout, new NewOrderTablesFragment()).addToBackStack(null).commit();
         });
-        cvEditOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                        .replace(R.id.fragmentViewLayout, new EditOrderTablesFragment()).addToBackStack(null).commit();
-            }
+
+        // If EditOrder CardView is clicked
+        cvEditOrder.setOnClickListener(v -> {
+            // Go to EditOrderFragment
+            getFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                    .replace(R.id.fragmentViewLayout, new EditOrderTablesFragment()).addToBackStack(null).commit();
         });
-        cvLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(getString(R.string.LOG_OUT))
-                        .setMessage(getString(R.string.HOME_CONFIRM_LOG_OUT))
-                        .setNegativeButton(getString(R.string.NO), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .setPositiveButton(getString(R.string.YES), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                getActivity().finish();
-                            }
-                        })
-                        .create();
-                final AlertDialog dialog = builder.show();
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));
-                dialog.show();
-            }
+
+        // If LogOut CardView is clicked
+        cvLogOut.setOnClickListener(v -> {
+            // Create confirmation dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(getString(R.string.LOG_OUT))
+                    .setMessage(getString(R.string.HOME_CONFIRM_LOG_OUT))
+                    .setNegativeButton(getString(R.string.NO), (dialog, which) -> {
+                        // If "No" is clicked, cancel the dialog
+                        dialog.cancel();
+                    })
+                    .setPositiveButton(getString(R.string.YES), (dialog, which) -> {
+                        // Set the username null and finish the activity AppMainActivity
+                        DataClass.username = null;
+                        getActivity().finish();
+                    })
+                    .create();
+            final AlertDialog dialog = builder.show();
+
+            // Change the buttons color
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));
+
+            // Show the dialog
+            dialog.show();
         });
         return fView;
     }

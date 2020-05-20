@@ -3,9 +3,7 @@ package com.gestmans.Interface.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
-import com.gestmans.Business.DataClass;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -28,8 +26,6 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
         LoginActivity.postQRLogin(result.getText());
         onBackPressed();
     }
-
-
 
     @Override
     protected void onPause() {

@@ -4,15 +4,15 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.gestmans.Business.fetchDataPHP;
+import com.gestmans.Business.FetchDataPHP;
 import com.gestmans.R;
 
 import java.util.ArrayList;
@@ -27,38 +27,68 @@ public class NewOrderTablesFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View fView = inflater.inflate(R.layout.fragment_new_order_tables, container, false);
+
+        // Reference the elements from the XML layout
         references(fView);
         List<String> al = new ArrayList<>();
         String json = "";
         try {
-            json = new fetchDataPHP().execute("available_room_tables").get();
+            // Get the available room tables
+            json = new FetchDataPHP().execute("available_room_tables").get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+
+        // Check if the returned values is not error
         if (!json.equals("error")) {
+            // Format the table names and add it to the List
             String[] numTables = json.split("-");
             for (String numTable : numTables) {
                 al.add("Table " + numTable);
             }
+
+            // If the list is empty, add "empty" value value to the list
             if (al.isEmpty()) al.add(getString(R.string.ORDER_TABLES_NO_TABLES));
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
-            lvTablesNew.setAdapter(arrayAdapter);
+
+            // Adapt the array to the ListView
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
+            lvTablesNew.setAdapter(adapter);
+
+            // Check if the first element is not the "error" message
             if (!al.get(0).equals(getString(R.string.ORDER_TABLES_NO_TABLES))) {
+
+                // When item in ListView is clicked
                 lvTablesNew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Toast.makeText(getActivity(), lvTablesNew.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), lvTablesNew.getItemAtPosition(position).toString());
+
+                        // Load the fragment giving it the table selected
+                        NewOrderSelectionFragment fragment = new NewOrderSelectionFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("table", lvTablesNew.getItemAtPosition(position).toString());
+                        fragment.setArguments(bundle);
+
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), lvTablesNew.getItemAtPosition(position).toString());
+
+                        // Go to the fragment
+                        getFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                                .replace(R.id.fragmentViewLayout, fragment).addToBackStack(null).commit();
                     }
                 });
             }
+
+            // If the returned value is an error
         } else {
-            al.add(getString(R.string.ORDER_TABLES_NO_TABLES));
+            // Add error value to the list
+            al.add(getString(R.string.ORDER_TABLES_ERROR_TABLES));
+
+            // Adapt the list to the ListView
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
             lvTablesNew.setAdapter(arrayAdapter);
         }

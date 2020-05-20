@@ -29,6 +29,7 @@
     <!--endregion-->
 
     <!--region NEW_ORDER_SELECTION_STRINGS-->
+    <string name="NEW_ORDER_SELECTION_TITLE">New Order for %s</string>
     <string name="NEW_ORDER_SELECTION_CREATE_TICKET">Create Ticket</string>
     <string name="NEW_ORDER_SELECTION_CONFIRM_DISMISS">Are you sure you want to dismiss this order?</string>
     <!--endregion-->
@@ -36,14 +37,21 @@
     <!--region EDIT_ORDER_COMMON_STRINGS-->
     <!--endregion-->
 
+    <!--region EDIT_ORDER_TABLE_STRINGS-->
+
+    <!--endregion-->
+
     <!--region EDIT_ORDER_SELECTION_STRINGS-->
+    <string name="EDIT_ORDER_SELECTION_TITLE">Edit Order for %s</string>
     <string name="EDIT_ORDER_SELECTION_MODIFY_TICKET">Modify Ticket</string>
     <string name="EDIT_ORDER_SELECTION_CONFIRM_DISMISS">Are you sure you want to dismiss the modification of this order?</string>
     <!--endregion-->
 
     <!--region ORDER_COMMON_STRINGS-->
     <string name="ORDER_TABLES_NO_TABLES">No tables were found.</string>
+    <string name="ORDER_TABLES_ERROR_TABLES">Error while retrieving tables.</string>
     <string name="ORDER_SELECTION_SPINNER_HINT">Dish type</string>
+    <string name="ORDER_TABLE_HOLDER">Table</string>
     <!--endregion-->
 
     <!--region PERMISSIONS_STRINGS-->
@@ -54,7 +62,11 @@
     <!--region ACTIVITIES_STRINGS-->
     <string name="LOGIN_ACTIVITY">LOGIN-ACTIVITY</string>
     <string name="QR_SCANNER_ACTIVITY">QR_SCANNER-ACTIVITY</string>
-    <string name="FETCH_PHP_CLASS">QR_SCANNER-ACTIVITY</string>
+    <string name="FETCH_PHP_CLASS">FETCH_PHP-CLASS</string>
+    <string name="NEW_ORDER_TABLES_FRAGMENT">NEW_ORDER_SELECTION-FRAGMENT</string>
+    <string name="EDIT_ORDER_TABLES_FRAGMENT">EDIT_ORDER_SELECTION-FRAGMENT</string>
+    <string name="NEW_ORDER_SELECTION_FRAGMENT">NEW_ORDER_SELECTION-FRAGMENT</string>
+    <string name="EDIT_ORDER_SELECTION_FRAGMENT">EDIT_ORDER_SELECTION-FRAGMENT</string>
     <!--endregion-->
 
     <!--region COMMON_STRINGS-->
