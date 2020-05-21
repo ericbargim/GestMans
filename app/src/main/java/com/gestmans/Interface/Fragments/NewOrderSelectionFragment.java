@@ -17,6 +17,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.gestmans.Business.FetchDataPHP;
+import com.gestmans.Business.HelperClass;
+import com.gestmans.Business.OrdersUtilitiesClass;
 import com.gestmans.R;
 
 import java.util.Arrays;
@@ -71,11 +73,12 @@ public class NewOrderSelectionFragment extends Fragment {
             e.printStackTrace();
         }
 
-        // Put the received data on the spinner
-        String[] dishTypes = data.split("-");
-        List<String> al = Arrays.asList(dishTypes);
+        // Transform String to List and capitalize first letter
+        List<String> listDishTypes = OrdersUtilitiesClass.stringToListCapitalize(data);
+
+        // Put the list on the spinner
         ArrayAdapter<String> adapter;
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_text_selected, al);
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_text_selected, listDishTypes);
         adapter.setDropDownViewResource(R.layout.spinner_text_dropdown);
         spDishType.setAdapter(adapter);
 
@@ -85,14 +88,36 @@ public class NewOrderSelectionFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Get the dishes of the selected dish type and add them to the list
                 String data;
-                try {
-                    data = new FetchDataPHP().execute("get_dishes", spDishType.getSelectedItem().toString().toLowerCase()).get();
-                    List<String> al = Arrays.asList(data.split("-"));
-                    ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
-                    lvDishes.setAdapter(array);
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
+                String dishType = spDishType.getSelectedItem().toString().toLowerCase();
+                if (!dishType.equals("menu")) {
+                    try {
+                        // Get the dishes of the selected dish type
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), dishType);
+                        data = new FetchDataPHP().execute("get_dishes", dishType).get();
+
+                        // Add the dishes to the list
+                        List<String> listDishes = Arrays.asList(data.split("-"));
+                        ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, listDishes);
+                        lvDishes.setAdapter(array);
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        // Get the dishes of the selected dish type
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), dishType);
+                        data = new FetchDataPHP().execute("get_menus", dishType).get();
+
+                        // Add the dishes to the list
+                        List<String> listDishes = Arrays.asList(data.split("-"));
+                        listDishes = HelperClass.capitalizeLetters(listDishes);
+                        ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, listDishes);
+                        lvDishes.setAdapter(array);
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+
             }
 
             @Override
@@ -106,6 +131,7 @@ public class NewOrderSelectionFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = lvDishes.getItemAtPosition(position).toString();
+
             }
         });
 

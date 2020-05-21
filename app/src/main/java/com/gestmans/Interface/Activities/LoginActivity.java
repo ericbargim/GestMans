@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -51,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         references();
 
         // Call the constructor of the loading screen
-        final LoadingDialog ld = new LoadingDialog((Activity) mContext);
+        LoadingDialog ld = new LoadingDialog((Activity) mContext);
 
         // This is needed to apply the font of the app to the password field
         Typeface cache = etPassword.getTypeface();
@@ -78,76 +79,78 @@ public class LoginActivity extends AppCompatActivity {
             //All EditText fields are not empty
             else {
                 // Hide keyboard
-                HelperClass.hideKeyboard((Activity)mContext);
+                HelperClass.hideKeyboard((Activity) mContext);
 
                 // Start loading screen
                 ld.startLoadingDialog();
 
-                // Get text from TextInputEditTexts
-                String username = etLogin.getText().toString();
-                String password = etPassword.getText().toString();
-                try {
-                    // Check if username exist in DB
-                    if (Integer.parseInt(new FetchDataPHP().execute("username_exist", username).get()) > 0) {
-                        // Username exist in DB
-                        Log.d(getString(R.string.LOGIN_ACTIVITY), "Username exist. Checking password.");
+                new Handler().post(() -> {
+                    // Get text from TextInputEditTexts
+                    String username = etLogin.getText().toString();
+                    String password = etPassword.getText().toString();
+                    try {
+                        // Check if username exist in DB
+                        if (Integer.parseInt(new FetchDataPHP().execute("username_exist", username).get()) > 0) {
+                            // Username exist in DB
+                            Log.d(getString(R.string.LOGIN_ACTIVITY), "Username exist. Checking password.");
 
-                        // Check if password matches username in DB
-                        if (Integer.parseInt(new FetchDataPHP().execute("username_password_matches", username, password).get()) > 0) {
-                            // Password matches
-                            Log.d(getString(R.string.LOGIN_ACTIVITY), "Password matches.");
+                            // Check if password matches username in DB
+                            if (Integer.parseInt(new FetchDataPHP().execute("username_password_matches", username, password).get()) > 0) {
+                                // Password matches
+                                Log.d(getString(R.string.LOGIN_ACTIVITY), "Password matches.");
 
-                            // Save name and lastname
-                            String name = new FetchDataPHP().execute("get_name_lastname", username).get();
-                            if (!name.equals("error")) {
-                                DataClass.username = name;
+                                // Save name and lastname
+                                String name = new FetchDataPHP().execute("get_name_lastname", username).get();
+                                if (!name.equals("error")) {
+                                    DataClass.username = name;
+                                } else {
+                                    DataClass.username = getString(R.string.HOME_WELCOME_HOLDER_USER);
+                                }
+
+                                // Close loading screen
+                                ld.dismissDialog();
+                                startActivity(new Intent(getApplicationContext(), AppMainActivity.class));
                             } else {
-                                DataClass.username = getString(R.string.HOME_WELCOME_HOLDER_USER);
+                                // Password does not match
+                                Log.d(getString(R.string.LOGIN_ACTIVITY), "Password does not match.");
+
+                                // Close loading screen
+                                ld.dismissDialog();
+
+                                // Select password TextInputEditText text
+                                etPassword.requestFocus();
+                                etPassword.selectAll();
+
+                                // Show error in login TextInputLayout
+                                ilPassowrd.setError("Wrong password.");
+
+                                // Show keyboard
+                                HelperClass.showKeyboard((Activity) mContext);
                             }
-
-                            // Close loading screen
-                            ld.dismissDialog();
-                            startActivity(new Intent(getApplicationContext(), AppMainActivity.class));
                         } else {
-                            // Password does not match
-                            Log.d(getString(R.string.LOGIN_ACTIVITY), "Password does not match.");
+                            // Username does not exist in DB
+                            Log.d(getString(R.string.LOGIN_ACTIVITY), "Username does not exist.");
 
                             // Close loading screen
                             ld.dismissDialog();
 
-                            // Select password TextInputEditText text
-                            etPassword.requestFocus();
-                            etPassword.selectAll();
+                            // Select login TextInputEditText text
+                            etLogin.requestFocus();
+                            etLogin.selectAll();
 
-                            // Show error in login TextInputLayout
-                            ilPassowrd.setError("Wrong password.");
+                            // Show error in password TextInputLayout
+                            ilLogin.setError("Username not found.");
 
                             // Show keyboard
-                            HelperClass.showKeyboard((Activity)mContext);
+                            HelperClass.showKeyboard((Activity) mContext);
                         }
-                    } else {
-                        // Username does not exist in DB
-                        Log.d(getString(R.string.LOGIN_ACTIVITY), "Username does not exist.");
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
 
                         // Close loading screen
                         ld.dismissDialog();
-
-                        // Select login TextInputEditText text
-                        etLogin.requestFocus();
-                        etLogin.selectAll();
-
-                        // Show error in password TextInputLayout
-                        ilLogin.setError("Username not found.");
-
-                        // Show keyboard
-                        HelperClass.showKeyboard((Activity)mContext);
                     }
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-
-                    // Close loading screen
-                    ld.dismissDialog();
-                }
+                });
             }
         });
         // When user clicks Login with QR button
@@ -167,16 +170,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public static void postQRLogin(String qr) {
-        /*LoadingDialog ld = new LoadingDialog((Activity)mContext);
-        ld.startLoadingDialog();
-        Thread mThread = new Thread() {
-            @Override
-            public void run() {
-
-            }
-        };
-        mThread.start();*/
-
         // Method called from QRScannerActivity after detecting QR
         try {
             Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY), "QR received: " + qr + ".");
@@ -185,12 +178,10 @@ public class LoginActivity extends AppCompatActivity {
             if (Integer.parseInt(new FetchDataPHP().execute("qr_code_exist", qr).get()) > 0) {
                 Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY), "QR exist.");
                 DataClass.username = new FetchDataPHP().execute("get_name_lastname", qr).get();
-                //ld.dismissDialog();
                 mContext.startActivity(new Intent(mContext, AppMainActivity.class));
 
-            // QR does not exist in DB
+                // QR does not exist in DB
             } else {
-                //ld.dismissDialog();
                 Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY), "QR does not exist.");
                 HelperClass.createDialogMessageSingle("Error", "QR does not exist", "OK", mContext);
             }

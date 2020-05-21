@@ -1,6 +1,5 @@
 package com.gestmans.Interface.Fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -18,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.gestmans.Business.FetchDataPHP;
+import com.gestmans.Business.OrdersUtilitiesClass;
 import com.gestmans.R;
 
 import java.util.Arrays;
@@ -72,11 +72,12 @@ public class EditOrderSelectionFragment extends Fragment {
             e.printStackTrace();
         }
 
-        // Put the received data on the spinner
-        String[] dishTypes = data.split("-");
-        List<String> al = Arrays.asList(dishTypes);
+        // Transform String to List and capitalize first letter
+        List<String> listDishTypes = OrdersUtilitiesClass.stringToListCapitalize(data);
+
+        // Put the list on the spinner
         ArrayAdapter<String> adapter;
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_text_selected, al);
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_text_selected, listDishTypes);
         adapter.setDropDownViewResource(R.layout.spinner_text_dropdown);
         spDishType.setAdapter(adapter);
 
@@ -87,7 +88,12 @@ public class EditOrderSelectionFragment extends Fragment {
                 // Get the dishes of the selected dish type and add them to the list
                 String data;
                 try {
+                    // Get the dishes of the selected dish type
+                    String dishType = spDishType.getSelectedItem().toString().toLowerCase();
+                    Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), dishType);
                     data = new FetchDataPHP().execute("get_dishes", spDishType.getSelectedItem().toString().toLowerCase()).get();
+
+                    // Add the dishes to the list
                     List<String> al = Arrays.asList(data.split("-"));
                     ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
                     lvDishes.setAdapter(array);
@@ -99,6 +105,14 @@ public class EditOrderSelectionFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        // When an item is selected in ListViewDishes
+        lvDishes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String name = lvDishes.getItemAtPosition(position).toString();
             }
         });
 

@@ -15,11 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class FetchDataPHP extends AsyncTask<String, String, String> {
 
@@ -52,8 +47,66 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             case "get_dishes":
                 data = getDishes(type[1]);
                 break;
+            case "get_menus":
+                data = getMenus();
+                break;
         }
         return data;
+    }
+
+    private String getMenus() {
+        String returningData;
+        URL url;
+        HttpURLConnection connectionURL = null;
+        InputStream is = null;
+        BufferedReader br = null;
+        try {
+            // Go to the URL of PHP file to get Dishes of the sent dish type
+            url = new URL("https://gestmans.000webhostapp.com/PHP/get_menu.php");
+
+            // Open link and get text shown (JSON format)
+            connectionURL = (HttpURLConnection) url.openConnection();
+            is = connectionURL.getInputStream();
+            br = new BufferedReader(new InputStreamReader(is));
+            returningData = br.readLine();
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
+
+            // Format the JSON to get a string of the different items, split by '-'
+            JSONObject initialJo = new JSONObject(returningData);
+            returningData = "";
+            JSONArray ja = (JSONArray) initialJo.get("success");
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), ja.toString());
+            for (int i = 0; i < ja.length(); i++) {
+                String dish = (String) ja.get(i);
+                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), dish);
+                returningData += dish + "-";
+            }
+
+            // Erase the leftover '-'
+            returningData = HelperClass.removeLastChar(returningData);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            returningData = "error";
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (connectionURL != null) {
+                connectionURL.disconnect();
+            }
+        }
+        return returningData;
     }
 
     private String getDishes(String type) {
@@ -64,7 +117,7 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         BufferedReader br = null;
         try {
             // Go to the URL of PHP file to get Dishes of the sent dish type
-            url = new URL("https://gestmans.000webhostapp.com/PHP/get_menu.php?dish=" + type);
+            url = new URL("https://gestmans.000webhostapp.com/PHP/get_dish_name.php?dish=" + type);
 
             // Open link and get text shown (JSON format)
             connectionURL = (HttpURLConnection) url.openConnection();
@@ -85,8 +138,7 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             }
 
             // Erase the leftover '-'
-            returningData = returningData.substring(0, returningData.length() - 1);
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
+            returningData = HelperClass.removeLastChar(returningData);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             returningData = "error";
@@ -140,59 +192,18 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
                 returningData += dishType + "-";
             }
             // Erase the leftover '-'
-            returningData = returningData.substring(0, returningData.length() - 1);
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
+            returningData = HelperClass.removeLastChar(returningData);
 
-            final String[] orderDishes = new String[]{"first", "second", "dessert", "drink", "menu"};
-            final List<String> stringListCopy = Arrays.asList(returningData.split("-"));
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), Arrays.toString(returningData.split("-")));
-            ArrayList<String> sortedList = new ArrayList<>(stringListCopy);
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), sortedList + " - before sorting");
-            Collections.sort(sortedList, Comparator.comparing(s -> orderDishes[stringListCopy.indexOf(s)]));
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), sortedList + " - after sorting");
+            // Personalized sort array
+            returningData = HelperClass.sortArray(returningData.split("-"));
 
-            ArrayList<String> al = new ArrayList<>();
-            for (int i = 0; i < returningData.split("-").length; i++) {
-                for (int j = 0; j < returningData.split("-").length; j++) {
-                    String data = returningData.split("-")[j];
-                    String dataFormatted = data.substring(0, 1).toUpperCase() + data.substring(1).toLowerCase();
-                    switch (i) {
-                        case 0:
-                            if (data.equals("first")) {
-                                al.add(dataFormatted);
-                            }
-                            break;
-                        case 1:
-                            if (data.equals("second")) {
-                                al.add(dataFormatted);
-                            }
-                            break;
-                        case 2:
-                            if (data.equals("dessert")) {
-                                al.add(dataFormatted);
-                            }
-                            break;
-                        case 3:
-                            if (data.equals("drink")) {
-                                al.add(dataFormatted);
-                            }
-                            break;
-                        case 4:
-                            if (data.equals("menu")) {
-                                al.add(dataFormatted);
-                            }
-                            break;
-                    }
-                }
+            //If there are menus, add it
+            if (thereAreMenus()) {
+                returningData += "menu";
+            } else {
+                // Erase the leftover '-'
+                returningData = HelperClass.removeLastChar(returningData);
             }
-            returningData = "";
-            for (String element : al) {
-                returningData += element + "-";
-            }
-
-            // Erase the leftover '-'
-            returningData = returningData.substring(0, returningData.length() - 1);
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             returningData = "error";
@@ -356,8 +367,7 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             }
 
             // Erase the leftover '-'
-            returningData = returningData.substring(0, returningData.length() - 1);
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
+            returningData = HelperClass.removeLastChar(returningData);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             returningData = "error";
@@ -381,5 +391,55 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             }
         }
         return returningData;
+    }
+
+    private static boolean thereAreMenus() {
+        String returningData;
+        URL url;
+        HttpURLConnection connectionURL = null;
+        InputStream is = null;
+        BufferedReader br = null;
+        boolean thereAreMenus = false;
+        try {
+            // Go to the URL of PHP file to get Dishes of the sent dish type
+            url = new URL("https://gestmans.000webhostapp.com/PHP/get_menu.php");
+
+            // Open link and get text shown (JSON format)
+            connectionURL = (HttpURLConnection) url.openConnection();
+            is = connectionURL.getInputStream();
+            br = new BufferedReader(new InputStreamReader(is));
+            returningData = br.readLine();
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
+
+            // Format the JSON to get a string of the different items, split by '-'
+            JSONObject initialJo = new JSONObject(returningData);
+            returningData = "";
+            JSONArray ja = (JSONArray) initialJo.get("success");
+            if (ja.length() > 0) {
+                thereAreMenus = true;
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            returningData = "error";
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (connectionURL != null) {
+                connectionURL.disconnect();
+            }
+        }
+        return thereAreMenus;
     }
 }

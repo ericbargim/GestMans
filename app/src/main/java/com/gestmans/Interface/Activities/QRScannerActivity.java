@@ -2,8 +2,11 @@ package com.gestmans.Interface.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 
+import com.gestmans.Interface.Dialogs.LoadingDialog;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -23,7 +26,9 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
     @Override
     public void handleResult(Result result) {
         //When scanner detects a QR code, send the data and press back button
-        LoginActivity.postQRLogin(result.getText());
+        LoadingDialog lod = new LoadingDialog(QRScannerActivity.this);
+        lod.startLoadingDialog();
+        new Handler().post(() -> LoginActivity.postQRLogin(result.getText()));
         onBackPressed();
     }
 

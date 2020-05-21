@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -23,6 +22,8 @@ import java.util.concurrent.ExecutionException;
 public class EditOrderTablesFragment extends Fragment {
 
     private ListView lvTablesEdit;
+
+    private LoadingDialog ld = null;
 
     public EditOrderTablesFragment() {
         // Required empty public constructor
@@ -39,8 +40,6 @@ public class EditOrderTablesFragment extends Fragment {
         List<String> al = new ArrayList<>();
         String json = "";
 
-        // Load the loading screen
-        LoadingDialog ld = new LoadingDialog(getActivity());
         try {
             // Get the available room tables
             json = new FetchDataPHP().execute("unavailable_room_tables").get();
@@ -67,23 +66,20 @@ public class EditOrderTablesFragment extends Fragment {
             if (!al.get(0).equals(getString(R.string.ORDER_TABLES_NO_TABLES))) {
 
                 // When item in ListView is clicked
-                lvTablesEdit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Log.d(getString(R.string.EDIT_ORDER_TABLES_FRAGMENT), lvTablesEdit.getItemAtPosition(position).toString());
+                lvTablesEdit.setOnItemClickListener((parent, view, position, id) -> {
+                    Log.d(getString(R.string.EDIT_ORDER_TABLES_FRAGMENT), lvTablesEdit.getItemAtPosition(position).toString());
 
-                        // Load the fragment giving it the table selected
-                        EditOrderSelectionFragment fragment = new EditOrderSelectionFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("table", lvTablesEdit.getItemAtPosition(position).toString());
-                        fragment.setArguments(bundle);
+                    // Load the fragment giving it the table selected
+                    EditOrderSelectionFragment fragment = new EditOrderSelectionFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("table", lvTablesEdit.getItemAtPosition(position).toString());
+                    fragment.setArguments(bundle);
 
-                        Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), lvTablesEdit.getItemAtPosition(position).toString());
+                    Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), lvTablesEdit.getItemAtPosition(position).toString());
 
-                        // Go to the fragment
-                        getFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                                .replace(R.id.fragmentViewLayout, fragment).addToBackStack(null).commit();
-                    }
+                    // Go to the fragment
+                    getFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                            .replace(R.id.fragmentViewLayout, fragment).addToBackStack(null).commit();
                 });
             }
 
