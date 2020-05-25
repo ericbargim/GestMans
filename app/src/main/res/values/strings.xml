@@ -52,6 +52,7 @@
     <string name="ORDER_TABLES_ERROR_TABLES">Error while retrieving tables.</string>
     <string name="ORDER_SELECTION_SPINNER_HINT">Dish type</string>
     <string name="ORDER_TABLE_HOLDER">Table</string>
+    <string name="ORDER_QUESTION_REMOVE_DISH">Are you sure you want to delete the dish %s from the order?</string>
     <!--endregion-->
 
     <!--region PERMISSIONS_STRINGS-->
@@ -68,6 +69,7 @@
     <string name="EDIT_ORDER_TABLES_FRAGMENT">EDIT_ORDER_SELECTION-FRAGMENT</string>
     <string name="NEW_ORDER_SELECTION_FRAGMENT">NEW_ORDER_SELECTION-FRAGMENT</string>
     <string name="EDIT_ORDER_SELECTION_FRAGMENT">EDIT_ORDER_SELECTION-FRAGMENT</string>
+    <string name="LIST_VIEW_TICKET_ADAPTER_CLASS">LIST_VIEW_TICKET_ADAPTER-CLASS</string>
     <!--endregion-->
 
     <!--region COMMON_STRINGS-->
@@ -75,6 +77,8 @@
     <string name="DISMISS">Dismiss</string>
     <string name="YES">Yes</string>
     <string name="NO">No</string>
+    <string name="OK">OK</string>
+    <string name="WARNING">Warning</string>
     <string name="NEW_ORDER">New Order</string>
     <string name="EDIT_ORDER">Edit Order</string>
     <string name="LOG_OUT">Log Out</string>

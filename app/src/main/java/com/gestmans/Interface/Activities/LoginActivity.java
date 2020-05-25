@@ -107,6 +107,10 @@ public class LoginActivity extends AppCompatActivity {
                                     DataClass.username = getString(R.string.HOME_WELCOME_HOLDER_USER);
                                 }
 
+                                // Clear both TextInputEditTexts
+                                etLogin.setText("");
+                                etPassword.setText("");
+
                                 // Close loading screen
                                 ld.dismissDialog();
                                 startActivity(new Intent(getApplicationContext(), AppMainActivity.class));

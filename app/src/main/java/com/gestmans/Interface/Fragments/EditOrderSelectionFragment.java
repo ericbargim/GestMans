@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.gestmans.Business.FetchDataPHP;
+import com.gestmans.Business.IOnBackPressed;
 import com.gestmans.Business.OrdersUtilitiesClass;
 import com.gestmans.R;
 
@@ -24,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class EditOrderSelectionFragment extends Fragment {
+public class EditOrderSelectionFragment extends Fragment implements IOnBackPressed {
 
     private TextView tvTitle;
     private Spinner spDishType;
@@ -95,7 +96,7 @@ public class EditOrderSelectionFragment extends Fragment {
 
                     // Add the dishes to the list
                     List<String> al = Arrays.asList(data.split("-"));
-                    ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
+                    ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, al);
                     lvDishes.setAdapter(array);
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
@@ -118,23 +119,33 @@ public class EditOrderSelectionFragment extends Fragment {
 
         // When dismiss button is clicked
         btnDismiss.setOnClickListener(v -> {
-            // Create dialog to confirm the dismiss
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(getString(R.string.EDIT_ORDER))
-                    .setMessage(getString(R.string.EDIT_ORDER_SELECTION_CONFIRM_DISMISS))
-                    .setNegativeButton(getString(R.string.NO), (dialog, which) -> dialog.cancel())
-                    .setPositiveButton(getString(R.string.YES), (dialog, which) -> getActivity().onBackPressed())
-                    .create();
-            final AlertDialog dialog = builder.show();
-
-            // Change the buttons color
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));
-
-            // Show the dialog
-            dialog.show();
+            dismissDialog();
         });
         return fView;
+    }
+
+    private void dismissDialog() {
+        // Create dialog to confirm the dismiss
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialog);
+        builder.setTitle(getString(R.string.EDIT_ORDER))
+                .setMessage(getString(R.string.EDIT_ORDER_SELECTION_CONFIRM_DISMISS))
+                .setNegativeButton(getString(R.string.NO), (dialog, which) -> dialog.cancel())
+                .setPositiveButton(getString(R.string.YES), (dialog, which) -> getFragmentManager().popBackStack())
+                .create();
+        final AlertDialog dialog = builder.show();
+
+        // Change the buttons color
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.purpleGradient, null));
+
+        // Show the dialog
+        dialog.show();
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        dismissDialog();
+        return true;
     }
 
     private void references(View fView) {

@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -36,19 +35,20 @@ public class NewOrderTablesFragment extends Fragment {
         // Reference the elements from the XML layout
         references(fView);
         List<String> al = new ArrayList<>();
-        String json = "";
+        String[] json = {""};
+        // Get the available room tables
 
         try {
-            // Get the available room tables
-            json = new FetchDataPHP().execute("available_room_tables").get();
+
+            json[0] = new FetchDataPHP().execute("available_room_tables").get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
 
         // Check if the returned values is not error
-        if (!json.equals("error")) {
+        if (!json[0].equals("error")) {
             // Format the table names and add it to the List
-            String[] numTables = json.split("-");
+            String[] numTables = json[0].split("-");
             for (String numTable : numTables) {
                 al.add("Table " + numTable);
             }
@@ -57,7 +57,7 @@ public class NewOrderTablesFragment extends Fragment {
             if (al.isEmpty()) al.add(getString(R.string.ORDER_TABLES_NO_TABLES));
 
             // Adapt the array to the ListView
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, al);
             lvTablesNew.setAdapter(adapter);
 
             // Check if the first element is not the "error" message
@@ -78,6 +78,7 @@ public class NewOrderTablesFragment extends Fragment {
                     // Go to the fragment
                     getFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                             .replace(R.id.fragmentViewLayout, fragment).addToBackStack(null).commit();
+
                 });
             }
 
@@ -87,7 +88,7 @@ public class NewOrderTablesFragment extends Fragment {
             al.add(getString(R.string.ORDER_TABLES_ERROR_TABLES));
 
             // Adapt the list to the ListView
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, al);
             lvTablesNew.setAdapter(arrayAdapter);
         }
         return fView;

@@ -59,7 +59,7 @@ public class EditOrderTablesFragment extends Fragment {
             if (al.isEmpty()) al.add(getString(R.string.ORDER_TABLES_NO_TABLES));
 
             // Adapt the array to the ListView
-            ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
+            ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, al);
             lvTablesEdit.setAdapter(array);
 
             // Check if the first element is not the "error" message
@@ -89,7 +89,7 @@ public class EditOrderTablesFragment extends Fragment {
             al.add(getString(R.string.ORDER_TABLES_ERROR_TABLES));
 
             // Adapt the list to the ListView
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.listview_tables, al);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, al);
             lvTablesEdit.setAdapter(arrayAdapter);
         }
         return fView;

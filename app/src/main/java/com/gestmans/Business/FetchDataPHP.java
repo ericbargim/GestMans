@@ -44,8 +44,11 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             case "get_dish_type":
                 data = getDishType();
                 break;
-            case "get_dishes":
-                data = getDishes(type[1]);
+            case "get_dish_names":
+                data = getDishes(type[1], type[2]);
+                break;
+            case "get_dish_name_id":
+                data = getDishes(type[1], type[2]);
                 break;
             case "get_menus":
                 data = getMenus();
@@ -109,15 +112,22 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         return returningData;
     }
 
-    private String getDishes(String type) {
+    private String getDishes(String dishType, String returningType) {
         String returningData;
-        URL url;
+        URL url = null;
         HttpURLConnection connectionURL = null;
         InputStream is = null;
         BufferedReader br = null;
         try {
             // Go to the URL of PHP file to get Dishes of the sent dish type
-            url = new URL("https://gestmans.000webhostapp.com/PHP/get_dish_name.php?dish=" + type);
+            switch (returningType) {
+                case "name":
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/get_dish_name.php?dish=" + dishType);
+                    break;
+                case "name_id":
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/get_dish_with_id.php?dish=" + dishType);
+                    break;
+            }
 
             // Open link and get text shown (JSON format)
             connectionURL = (HttpURLConnection) url.openConnection();
@@ -129,12 +139,28 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             // Format the JSON to get a string of the different items, split by '-'
             JSONObject initialJo = new JSONObject(returningData);
             returningData = "";
-            JSONArray ja = (JSONArray) initialJo.get(type);
+            JSONArray ja = (JSONArray) initialJo.get(dishType);
             Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), ja.toString());
-            for (int i = 0; i < ja.length(); i++) {
-                String dish = (String) ja.get(i);
-                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), dish);
-                returningData += dish + "-";
+            switch (returningType) {
+                case "name":
+                    for (int i = 0; i < ja.length(); i++) {
+                        String dish = (String) ja.get(i);
+                        Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), dish);
+                        returningData += dish + "-";
+                    }
+                    break;
+                case "name_id":
+                    for (int i = 0; i < ja.length(); i++) {
+                        JSONArray dishArray = (JSONArray) ja.get(i);
+                        Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), dishArray.toString());
+                        for (int j = 0; j < dishArray.length(); j++) {
+                            String partDish = String.valueOf(dishArray.get(j));
+                            returningData += partDish + ",";
+                        }
+                        returningData = HelperClass.removeLastChar(returningData);
+                        returningData += "-";
+                    }
+                    break;
             }
 
             // Erase the leftover '-'

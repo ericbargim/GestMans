@@ -11,6 +11,7 @@ import com.gestmans.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HelperClass {
 
@@ -32,21 +33,30 @@ public class HelperClass {
         dialog.show();
     }
 
-    public static void createDialogMessageDual(String title, String message, String positiveButtonMessage, String negativeButtonMessage, Context context) {
+    public static boolean createDialogMessageDual(String title, String message, String positiveButtonMessage, String negativeButtonMessage, Context context) {
+        final boolean[] positiveClicked = {false};
         // Create the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(positiveButtonMessage, (dialog, which) -> dialog.dismiss())
-                .setNegativeButton(negativeButtonMessage, (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(positiveButtonMessage, (dialog, which) -> {
+                    positiveClicked[0] = true;
+                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), "Positive clicked");
+                })
+                .setNegativeButton(negativeButtonMessage, (dialog, which) -> {
+                    dialog.dismiss();
+                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), "Negative clicked");
+                })
                 .create();
         final AlertDialog dialog = builder.show();
 
         // Change the buttons color
-        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(context.getColor(R.color.purpleGradient));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getColor(R.color.purpleGradient));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getColor(R.color.purpleGradient));
 
         // Show the dialog
         dialog.show();
+        return positiveClicked[0];
     }
 
     public static void showKeyboard(Activity activity) {

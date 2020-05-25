@@ -9,4 +9,8 @@
         <item name="android:fontFamily">@font/new_media_regular</item>
     </style>
 
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/component_round</item>
+    </style>
+
 </resources>

@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
         // If LogOut CardView is clicked
         cvLogOut.setOnClickListener(v -> {
             // Create confirmation dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialog);
             builder.setTitle(getString(R.string.LOG_OUT))
                     .setMessage(getString(R.string.HOME_CONFIRM_LOG_OUT))
                     .setNegativeButton(getString(R.string.NO), (dialog, which) -> {
