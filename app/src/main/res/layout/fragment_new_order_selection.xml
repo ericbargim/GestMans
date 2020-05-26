@@ -26,10 +26,10 @@
         android:id="@+id/llDishDismissNew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/lvDishesNew"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,9 +50,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|center_vertical"
             android:layout_weight="6"
-            android:textColor="@color/red"
             android:background="@drawable/dismiss_button"
-            android:text="@string/DISMISS" />
+            android:text="@string/DISMISS"
+            android:textColor="@color/red" />
 
     </LinearLayout>
 
@@ -61,43 +61,57 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/component_round"
         android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/lvTicketNew"
+        app:layout_constraintBottom_toTopOf="@+id/lvOrderNew"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llDishDismissNew" />
 
     <ListView
-        android:id="@+id/lvTicketNew"
+        android:id="@+id/lvOrderNew"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/component_round"
         android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnCreateTicket"
+        app:layout_constraintBottom_toTopOf="@+id/btnCreateOrder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lvDishesNew" />
 
     <Button
-        android:id="@+id/btnCreateTicket"
-        android:layout_width="match_parent"
+        android:id="@+id/btnOrderNotesNew"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/component_round"
-        android:text="@string/NEW_ORDER_SELECTION_CREATE_TICKET"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/component_round"
+        android:text="@string/ORDER_NOTES"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnCreateOrder"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lvOrderNew" />
+
+    <Button
+        android:id="@+id/btnCreateOrder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/component_round"
+        android:text="@string/NEW_ORDER_SELECTION_CREATE_TICKET"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvTicketNew" />
-
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnOrderNotesNew"
+        app:layout_constraintTop_toBottomOf="@+id/lvOrderNew" />
 </androidx.constraintlayout.widget.ConstraintLayout>

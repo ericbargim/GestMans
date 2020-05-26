@@ -47,9 +47,6 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             case "get_dish_names":
                 data = getDishes(type[1], type[2]);
                 break;
-            case "get_dish_name_id":
-                data = getDishes(type[1], type[2]);
-                break;
             case "get_menus":
                 data = getMenus();
                 break;

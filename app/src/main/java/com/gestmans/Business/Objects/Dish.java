@@ -5,15 +5,17 @@ import androidx.annotation.NonNull;
 public class Dish {
     private String id;
     private String name;
+    private String dishType;
     private int quantity;
 
     public Dish() {
 
     }
 
-    public Dish(String id, String name, int quantity) {
+    public Dish(String id, String name, String dishType, int quantity) {
         this.id = id;
         this.name = name;
+        this.dishType = dishType;
         this.quantity = quantity;
     }
 
@@ -31,6 +33,14 @@ public class Dish {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDishType() {
+        return dishType;
+    }
+
+    public void setDishType(String dishType) {
+        this.dishType = dishType;
     }
 
     public int getQuantity() {
@@ -53,6 +63,6 @@ public class Dish {
     @NonNull
     @Override
     public String toString() {
-        return "Id: " + getId() + " - Name: " + getName() + " - Quantity: " + getQuantity();
+        return "Id: " + getId() + " - Name: " + getName() + " - Dish type: " + getDishType() + " - Quantity: " + getQuantity();
     }
 }

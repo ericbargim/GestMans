@@ -53,6 +53,8 @@
     <string name="ORDER_SELECTION_SPINNER_HINT">Dish type</string>
     <string name="ORDER_TABLE_HOLDER">Table</string>
     <string name="ORDER_QUESTION_REMOVE_DISH">Are you sure you want to delete the dish %s from the order?</string>
+    <string name="ORDER_NOTES">Order notes</string>
+    <string name="ORDER_DETAILS_MESSAGE">Are you sure you want to dismiss the order details screen?</string>
     <!--endregion-->
 
     <!--region PERMISSIONS_STRINGS-->
@@ -78,6 +80,7 @@
     <string name="YES">Yes</string>
     <string name="NO">No</string>
     <string name="OK">OK</string>
+    <string name="SAVE">Save</string>
     <string name="WARNING">Warning</string>
     <string name="NEW_ORDER">New Order</string>
     <string name="EDIT_ORDER">Edit Order</string>
