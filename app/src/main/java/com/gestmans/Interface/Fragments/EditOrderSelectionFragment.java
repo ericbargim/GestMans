@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +13,32 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.gestmans.Business.DataClass;
 import com.gestmans.Business.FetchDataPHP;
+import com.gestmans.Business.HelperClass;
 import com.gestmans.Business.IOnBackPressed;
+import com.gestmans.Business.ListViewDishesAdapter;
+import com.gestmans.Business.ListViewOrderAdapter;
+import com.gestmans.Business.Objects.Dish;
 import com.gestmans.Business.OrdersUtilitiesClass;
+import com.gestmans.Interface.Dialogs.LoadingDialog;
+import com.gestmans.Interface.Dialogs.OrderMenuDialog;
+import com.gestmans.Interface.Dialogs.OrderNotesDialog;
 import com.gestmans.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -29,8 +47,12 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
 
     private TextView tvTitle;
     private Spinner spDishType;
-    private Button btnDismiss, btnCreateTicket;
-    private ListView lvDishes, lvTicket;
+    private Button btnDismiss, btnOrderNotes, btnCreateOrder;
+    private ListView lvDishes, lvOrderDishes, lvOrderMenus;
+    private RadioGroup rgDishMenu;
+    private RadioButton rbDishes, rbMenus;
+
+    private ListViewOrderAdapter adapterOrder;
 
     public EditOrderSelectionFragment() {
         // Required empty public constructor
@@ -45,82 +67,315 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
         // Reference the elements from the XML layout
         references(fView);
 
+        // Create the ListViewOrderAdapter object
+        adapterOrder = new ListViewOrderAdapter(getActivity(), new ArrayList<>());
+
+        // Create loading dialog
+        LoadingDialog ld = new LoadingDialog(getActivity());
+
         // Get the sent argument (table)
         Bundle bundle = getArguments();
-        String table = null;
+        final String[] table = {null};
         try {
             if (bundle.getString("table") != null) {
-                table = bundle.getString("table");
-                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), table);
+                table[0] = bundle.getString("table");
+                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), table[0]);
             }
+
+            // Set table number on title or go back
+            if (table[0] != null) {
+                tvTitle.setText(getString(R.string.EDIT_ORDER_SELECTION_TITLE, table[0]));
+            } else {
+                throw new NullPointerException();
+            }
+
+            // Set selected the RadioButtonDishes
+            rbDishes.setChecked(true);
+
+            // Get the multiple dish types
+            String data = "";
+            try {
+                data = new FetchDataPHP().execute("get_dish_type").get();
+                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), data);
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // Transform String to List and capitalize first letter
+            List<String> listDishTypes = OrdersUtilitiesClass.stringToListCapitalize(data);
+
+            // Put the list on the spinner
+            ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(getActivity(), R.layout.spinner_text_selected, listDishTypes);
+            adapterSpinner.setDropDownViewResource(R.layout.spinner_text_dropdown);
+            spDishType.setAdapter(adapterSpinner);
+
+            // When a spinner item is selected
+            spDishType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    // Start loading dialog
+                    ld.startLoadingDialog();
+
+                    new Handler().post(() -> {
+                        // Get the dishes of the selected dish type and add them to the list
+                        String data;
+                        String dishTypeSelected = spDishType.getSelectedItem().toString().toLowerCase();
+                        if (!dishTypeSelected.equals("menu")) {
+                            try {
+                                // Get the dishes of the selected dish type
+                                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), dishTypeSelected);
+                                data = new FetchDataPHP().execute("get_dish_names", "no_menu", dishTypeSelected).get();
+                                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), data);
+
+                                if (!(data.equals("empty") || data.equals("error"))) {
+                                    // Add the dishes to the list
+                                    String[] dishesComplete = data.split("-");
+                                    ArrayList<Dish> allDishes = new ArrayList<>();
+                                    for (int i = 0; i < dishesComplete.length; i++) {
+                                        String dish = dishesComplete[i];
+                                        String[] allDish = dish.split(",");
+                                        String dishName = allDish[0];
+                                        String dishId = allDish[1];
+                                        String dishType = allDish[2];
+                                        Dish dishObject = new Dish(dishId, dishName, dishType, 1);
+                                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), dishObject.toString());
+                                        allDishes.add(dishObject);
+                                    }
+
+                                    // Check dishes successfully added to List
+                                    for (Dish dish : allDishes) {
+                                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), dish.toString());
+                                    }
+
+                                    // Add the List to the ListView with an ArrayAdapter
+                                    ListViewDishesAdapter adapterDishes = new ListViewDishesAdapter(getActivity(), allDishes);
+                                    lvDishes.setAdapter(adapterDishes);
+
+                                    // Close loading dialog
+                                    ld.dismissDialog();
+                                } else if (data.equals("empty")) {
+                                    // If it's empty, only add one item "No dishes" to ListView
+                                    ArrayList<String> al = new ArrayList<>();
+                                    al.add("No dishes on this dish type.");
+                                    ArrayAdapter<String> adapterDishes = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, al);
+                                    lvDishes.setAdapter(adapterDishes);
+
+                                    // Close loading dialog
+                                    ld.dismissDialog();
+                                }
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+
+                                // Close loading dialog
+                                ld.dismissDialog();
+                            } catch (ArrayIndexOutOfBoundsException e) {
+                                // If an error occurs, only add one item "error" to ListView
+                                ArrayList<String> al = new ArrayList<>();
+                                al.add("Error");
+                                ArrayAdapter<String> adapterDishes = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, al);
+                                lvDishes.setAdapter(adapterDishes);
+
+                                // Close loading dialog
+                                ld.dismissDialog();
+                            }
+                        } else {
+                            try {
+                                // Get the dishes of the selected dish type
+                                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), dishTypeSelected);
+                                data = new FetchDataPHP().execute("get_menus", dishTypeSelected).get();
+
+                                // Add the dishes to the list
+                                List<String> listDishes = Arrays.asList(data.split("-"));
+                                listDishes = HelperClass.capitalizeLetters(listDishes);
+                                ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, listDishes);
+                                lvDishes.setAdapter(array);
+
+                                // Close loading dialog
+                                ld.dismissDialog();
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+
+                                // Close loading dialog
+                                ld.dismissDialog();
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            // When an item is selected in ListViewDishes
+            lvDishes.setOnItemClickListener((parent, view, position, id) -> {
+                // First check if the spinner selected item is menu
+                if (spDishType.getSelectedItem().toString().toLowerCase().equals("menu")) {
+                    // Get the name of the selected menu
+                    String menu = lvDishes.getItemAtPosition(position).toString();
+                    Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), menu);
+
+                    // Keep only the number of the selected menu
+                    int menuNum = Integer.parseInt(menu.replaceAll("[^\\d.]", ""));
+                    Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), String.valueOf(menuNum));
+
+                    // Create the OrderMenuDialogFragment
+                    OrderMenuDialog dialog = new OrderMenuDialog();
+
+                    // Create a bundle to send the menu number
+                    Bundle bundleMenu = new Bundle();
+                    bundleMenu.putInt("menuNum", menuNum);
+
+                    // Show the DialogFragment
+                    if (getFragmentManager() != null) {
+                        dialog.show(getFragmentManager(), "dialog");
+                    }
+                }
+
+                // If the dishType has no dishes, don't do anything
+                else if (lvDishes.getItemAtPosition(position).toString().equals("No dishes on this dish type.")) {
+                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Selected when there are no dishes");
+                }
+
+                // If an error occurred while retrieving dishes
+                else if (lvDishes.getItemAtPosition(position).toString().equals("Error")) {
+                    Toast.makeText(getActivity(), "Error formatting the dishes", Toast.LENGTH_SHORT).show();
+                }
+
+                // If not, check if is already in the array (lvOrder)
+                else {
+                    boolean isInArray = false;
+                    Dish dish = (Dish) parent.getAdapter().getItem(position);
+                    Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), dish.toString());
+                    ListAdapter adapter = lvOrderDishes.getAdapter();
+                    try {
+                        for (int i = 0; i < adapter.getCount(); i++) {
+                            Dish adapterDish = (Dish) adapter.getItem(i);
+                            if (dish.getId().equals(adapterDish.getId())) {
+                                isInArray = true;
+                            }
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), "Exception caught. No items in array.");
+                        e.printStackTrace();
+                    }
+
+                    // If is not in the array, add it
+                    if (!isInArray) {
+                        Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), "Dish not in Array. Adding it.");
+                        dish.setQuantity(1);
+                        Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), "Resetting quantity.");
+                        adapterOrder.add(dish);
+                        adapterOrder.notifyDataSetChanged();
+                        lvOrderDishes.setAdapter(adapterOrder);
+                    }
+                }
+            });
+
+            rgDishMenu.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    switch (checkedId) {
+                        case R.id.rbDishesNew:
+                            lvOrderDishes.setVisibility(View.VISIBLE);
+                            lvOrderMenus.setVisibility(View.GONE);
+                            break;
+                        case R.id.rbMenusNew:
+                            lvOrderMenus.setVisibility(View.VISIBLE);
+                            lvOrderDishes.setVisibility(View.GONE);
+                            break;
+                    }
+                }
+            });
+
+            // If order notes button is clicked
+            btnOrderNotes.setOnClickListener(v -> {
+                // Show the OrderNotesDialogFragment
+                OrderNotesDialog dialog = new OrderNotesDialog();
+                if (getFragmentManager() != null) {
+                    dialog.show(getFragmentManager(), "dialog");
+                }
+            });
+
+            // If create order button is clicked
+            btnCreateOrder.setOnClickListener(v -> {
+                // First, check if there are items on the order
+                if (lvOrderDishes.getCount() > 0) {
+                    String returningJson;
+                    String numTable, employee, orderNotes;
+
+                    try {
+                        // Create all the needed JSON Objects and JSON Arrays
+                        JSONObject jsonObjectAll = new JSONObject();
+                        JSONArray jsonArrayAll = new JSONArray();
+                        JSONObject jsonItems = new JSONObject();
+
+                        // Add the table number
+                        numTable = table[0].split(" ")[1];
+                        jsonItems.put("table", numTable);
+                        Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+
+                        // Add the employee who made the order
+                        employee = DataClass.username;
+                        jsonItems.put("employee", employee);
+                        Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+
+                        // Add the order notes (if it has)
+                        try {
+                            orderNotes = DataClass.orderNotes;
+                        } catch (NullPointerException e) {
+                            orderNotes = "null";
+                        }
+                        jsonItems.put("notes", orderNotes);
+                        Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+
+                        // Loop the array of possible dishes
+                        for (int i = 0; i < HelperClass.orderDishTypes.length; i++) {
+                            // Check if there are dishes of the selected dish type in order
+                            if (HelperClass.checkDishTypeExistsInOrder(lvOrderDishes.getAdapter(), HelperClass.orderDishTypes[i])) {
+                                // Add the dish type and the returning filled array
+                                jsonItems.put(HelperClass.orderDishTypes[i], HelperClass.itemsToJSON(lvOrderDishes.getAdapter(), HelperClass.orderDishTypes[i]));
+                            }
+
+                            // If not, create an empty array
+                            else {
+                                // Add the dish type and the returning empty array
+                                jsonItems.put(HelperClass.orderDishTypes[i], HelperClass.emptyJSON());
+                            }
+                            Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+                        }
+
+                        // Add all created JSONObjects to a JSONArray
+                        jsonArrayAll.put(jsonItems);
+                        Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), jsonArrayAll.toString());
+
+                        // Finally, create an "order" object with the created JSONArray
+                        jsonObjectAll.put("order", jsonArrayAll);
+                        returningJson = jsonObjectAll.toString();
+                        Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), returningJson);
+                    } catch (JSONException e) {
+                        System.out.println("uy");
+                        e.printStackTrace();
+                    }
+                }
+
+                // If order has no items, pop a Toast message
+                else {
+                    Toast.makeText(getActivity(), "Please, fill the order", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+
+            // When dismiss button is clicked
+            btnDismiss.setOnClickListener(v -> {
+                dismissDialog();
+            });
         } catch (NullPointerException ex) {
             Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), "Null table!!! Crash incoming!!!");
+            Toast.makeText(getActivity(), "Error while retrieving the table", Toast.LENGTH_SHORT).show();
+            getFragmentManager().popBackStack();
         }
-
-        // Set one title or other depending if it's null
-        if (table != null) {
-            tvTitle.setText(getString(R.string.EDIT_ORDER_SELECTION_TITLE, table));
-        } else {
-            tvTitle.setText(getString(R.string.EDIT_ORDER_SELECTION_TITLE, getString(R.string.ORDER_TABLE_HOLDER)));
-        }
-
-        // Get the multiple dish types
-        String data = "";
-        try {
-            data = new FetchDataPHP().execute("get_dish_type").get();
-            Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), data);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Transform String to List and capitalize first letter
-        List<String> listDishTypes = OrdersUtilitiesClass.stringToListCapitalize(data);
-
-        // Put the list on the spinner
-        ArrayAdapter<String> adapter;
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_text_selected, listDishTypes);
-        adapter.setDropDownViewResource(R.layout.spinner_text_dropdown);
-        spDishType.setAdapter(adapter);
-
-        // When a spinner item is selected
-        spDishType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Get the dishes of the selected dish type and add them to the list
-                String data;
-                try {
-                    // Get the dishes of the selected dish type
-                    String dishType = spDishType.getSelectedItem().toString().toLowerCase();
-                    Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), dishType);
-                    data = new FetchDataPHP().execute("get_dishes", spDishType.getSelectedItem().toString().toLowerCase()).get();
-
-                    // Add the dishes to the list
-                    List<String> al = Arrays.asList(data.split("-"));
-                    ArrayAdapter<String> array = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, al);
-                    lvDishes.setAdapter(array);
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        // When an item is selected in ListViewDishes
-        lvDishes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String name = lvDishes.getItemAtPosition(position).toString();
-            }
-        });
-
-        // When dismiss button is clicked
-        btnDismiss.setOnClickListener(v -> {
-            dismissDialog();
-        });
         return fView;
     }
 
@@ -149,11 +404,16 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
     }
 
     private void references(View fView) {
-        tvTitle = fView.findViewById(R.id.tvTitleEditSelection);
+        tvTitle = fView.findViewById(R.id.tvTitleSelectionEdit);
         spDishType = fView.findViewById(R.id.spDishTypeEdit);
         btnDismiss = fView.findViewById(R.id.btnDismissSelectionEdit);
         lvDishes = fView.findViewById(R.id.lvDishesEdit);
-        lvTicket = fView.findViewById(R.id.lvTicketEdit);
-        btnCreateTicket = fView.findViewById(R.id.btnModifyTicket);
+        lvOrderDishes = fView.findViewById(R.id.lvOrderDishesEdit);
+        lvOrderMenus = fView.findViewById(R.id.lvOrderMenusEdit);
+        rgDishMenu = fView.findViewById(R.id.rgDishMenuEdit);
+        rbDishes = fView.findViewById(R.id.rbDishesEdit);
+        rbMenus = fView.findViewById(R.id.rbMenusEdit);
+        btnOrderNotes = fView.findViewById(R.id.btnOrderNotesEdit);
+        btnCreateOrder = fView.findViewById(R.id.btnCreateOrderEdit);
     }
 }

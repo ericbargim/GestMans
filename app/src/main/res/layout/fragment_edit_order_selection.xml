@@ -7,12 +7,13 @@
     android:background="@color/purpleGradient">
 
     <TextView
-        android:id="@+id/tvTitleEditSelection"
+        android:id="@+id/tvTitleSelectionEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:text="@string/EDIT_ORDER"
         android:textColor="@color/white"
@@ -26,14 +27,15 @@
         android:id="@+id/llDishDismissEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/lvDishesEdit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitleEditSelection">
+        app:layout_constraintTop_toBottomOf="@+id/tvTitleSelectionEdit">
 
         <Spinner
             android:id="@+id/spDishTypeEdit"
@@ -49,9 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|center_vertical"
             android:layout_weight="6"
-            android:textColor="@color/red"
             android:background="@drawable/dismiss_button"
-            android:text="@string/DISMISS" />
+            android:text="@string/DISMISS"
+            android:textColor="@color/red" />
 
     </LinearLayout>
 
@@ -60,43 +62,115 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/component_round"
         android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/lvTicketEdit"
+        app:layout_constraintBottom_toTopOf="@+id/rlLvsOrderEdit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llDishDismissEdit" />
 
-    <ListView
-        android:id="@+id/lvTicketEdit"
+    <RelativeLayout
+        android:id="@+id/rlLvsOrderEdit"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/component_round"
-        android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnModifyTicket"
+        app:layout_constraintBottom_toTopOf="@+id/rgDishMenuEdit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvDishesEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/lvDishesEdit">
 
-    <Button
-        android:id="@+id/btnModifyTicket"
+        <ListView
+            android:id="@+id/lvOrderDishesEdit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp" />
+
+        <ListView
+            android:id="@+id/lvOrderMenusEdit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp" />
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/rgDishMenuEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/component_round"
-        android:text="@string/EDIT_ORDER_SELECTION_MODIFY_TICKET"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/llBottomButtonsEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rlLvsOrderEdit">
+
+        <RadioButton
+            android:id="@+id/rbDishesEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:buttonTint="@color/white"
+            android:gravity="center"
+            android:text="@string/ORDER_DISHES"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/rbMenusEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="2"
+            android:buttonTint="@color/white"
+            android:gravity="center"
+            android:text="@string/ORDER_MENUS"
+            android:textColor="@color/white" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/llBottomButtonsEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvTicketEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/rgDishMenuEdit">
 
+        <Button
+            android:id="@+id/btnOrderNotesEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:background="@drawable/component_round"
+            android:text="@string/ORDER_NOTES" />
+
+        <Button
+            android:id="@+id/btnCreateOrderEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="2"
+            android:background="@drawable/component_round"
+            android:text="@string/NEW_ORDER_SELECTION_CREATE_ORDER" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

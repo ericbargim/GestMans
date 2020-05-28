@@ -63,6 +63,14 @@ public class Dish {
     @NonNull
     @Override
     public String toString() {
-        return "Id: " + getId() + " - Name: " + getName() + " - Dish type: " + getDishType() + " - Quantity: " + getQuantity();
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("--- DISH ---").append("\n");
+        sb.append("ID: ").append(getId()).append("\n");
+        sb.append("Name: ").append(getName()).append("\n");
+        sb.append("Dish type: ").append(getDishType()).append("\n");
+        sb.append("Quantity: ").append(getQuantity()).append("\n");
+
+        return sb.toString();
     }
 }

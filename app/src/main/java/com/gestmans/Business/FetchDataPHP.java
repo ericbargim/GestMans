@@ -45,6 +45,7 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
                 data = getDishType();
                 break;
             case "get_dish_names":
+            case "get_dishes_menu":
                 data = getDishes(type[1], type[2]);
                 break;
             case "get_menus":
@@ -54,200 +55,34 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         return data;
     }
 
-    private String getMenus() {
-        String returningData;
-        URL url;
-        HttpURLConnection connectionURL = null;
-        InputStream is = null;
-        BufferedReader br = null;
-        try {
-            // Go to the URL of PHP file to get Dishes of the sent dish type
-            url = new URL("https://gestmans.000webhostapp.com/PHP/get_menu.php");
-
-            // Open link and get text shown (JSON format)
-            connectionURL = (HttpURLConnection) url.openConnection();
-            is = connectionURL.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is));
-            returningData = br.readLine();
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
-
-            // Format the JSON to get a string of the different items, split by '-'
-            JSONObject initialJo = new JSONObject(returningData);
-            returningData = "";
-            JSONArray ja = (JSONArray) initialJo.get("success");
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), ja.toString());
-            for (int i = 0; i < ja.length(); i++) {
-                String dish = (String) ja.get(i);
-                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), dish);
-                returningData += dish + "-";
-            }
-
-            // Erase the leftover '-'
-            returningData = HelperClass.removeLastChar(returningData);
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            returningData = "error";
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (connectionURL != null) {
-                connectionURL.disconnect();
-            }
-        }
-        return returningData;
-    }
-
-    private String getDishes(String dishType, String returningType) {
+    private String loginCheck(int type, String[] data) {
         String returningData;
         URL url = null;
-        HttpURLConnection connectionURL = null;
-        InputStream is = null;
-        BufferedReader br = null;
+
         try {
-            // Go to the URL of PHP file to get Dishes of the sent dish type
-            switch (returningType) {
-                case "name":
-                    url = new URL("https://gestmans.000webhostapp.com/PHP/get_dish_name.php?dish=" + dishType);
+            // Go to the URL of PHP file to check if user exist, or user and password matches or qr code exist
+            switch (type) {
+                case 0:
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/login/username_exists.php?user=" + data[1]);
                     break;
-                case "name_id":
-                    url = new URL("https://gestmans.000webhostapp.com/PHP/get_dish_with_id.php?dish=" + dishType);
+                case 1:
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/login/username_password_matches.php?user=" + data[1] + "&password=" + data[2]);
                     break;
-            }
-
-            // Open link and get text shown (JSON format)
-            connectionURL = (HttpURLConnection) url.openConnection();
-            is = connectionURL.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is));
-            returningData = br.readLine();
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
-
-            // Format the JSON to get a string of the different items, split by '-'
-            JSONObject initialJo = new JSONObject(returningData);
-            returningData = "";
-            JSONArray ja = (JSONArray) initialJo.get(dishType);
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), ja.toString());
-            switch (returningType) {
-                case "name":
-                    for (int i = 0; i < ja.length(); i++) {
-                        String dish = (String) ja.get(i);
-                        Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), dish);
-                        returningData += dish + "-";
-                    }
-                    break;
-                case "name_id":
-                    for (int i = 0; i < ja.length(); i++) {
-                        JSONArray dishArray = (JSONArray) ja.get(i);
-                        Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), dishArray.toString());
-                        for (int j = 0; j < dishArray.length(); j++) {
-                            String partDish = String.valueOf(dishArray.get(j));
-                            returningData += partDish + ",";
-                        }
-                        returningData = HelperClass.removeLastChar(returningData);
-                        returningData += "-";
-                    }
+                case 2:
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/login/qr_code_exists.php?qr=" + data[1]);
                     break;
             }
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - Web URL", url.toString());
+            returningData = getJSONWeb(url);
 
-            // Erase the leftover '-'
-            returningData = HelperClass.removeLastChar(returningData);
+            // Format the JSON to get a string of the received rows
+            JSONObject initialJO = new JSONObject(returningData);
+            int rowsSelected = (int) initialJO.get("success");
+            returningData = String.valueOf(rowsSelected);
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - returned rows", returningData);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            returningData = "error";
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (connectionURL != null) {
-                connectionURL.disconnect();
-            }
-        }
-        return returningData;
-    }
-
-    private String getDishType() {
-        String returningData;
-        URL url;
-        HttpURLConnection connectionURL = null;
-        InputStream is = null;
-        BufferedReader br = null;
-        try {
-            // Go to the URL of PHP file to get the multiple dish types
-            url = new URL("https://gestmans.000webhostapp.com/PHP/get_dish_type.php");
-
-            // Open link and get text shown (JSON format)
-            connectionURL = (HttpURLConnection) url.openConnection();
-            is = connectionURL.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is));
-            returningData = br.readLine();
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
-
-            // Format the JSON to get a string of the different items, split by '-'
-            JSONObject initialJo = new JSONObject(returningData);
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), initialJo.toString());
-            returningData = "";
-            JSONArray ja = (JSONArray) initialJo.get("success");
-            for (int i = 0; i < ja.length(); i++) {
-                String dishType = (String) ja.get(i);
-                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), dishType);
-                returningData += dishType + "-";
-            }
-            // Erase the leftover '-'
-            returningData = HelperClass.removeLastChar(returningData);
-
-            // Personalized sort array
-            returningData = HelperClass.sortArray(returningData.split("-"));
-
-            //If there are menus, add it
-            if (thereAreMenus()) {
-                returningData += "menu";
-            } else {
-                // Erase the leftover '-'
-                returningData = HelperClass.removeLastChar(returningData);
-            }
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            returningData = "error";
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (connectionURL != null) {
-                connectionURL.disconnect();
-            }
+            returningData = "-1";
         }
         return returningData;
     }
@@ -255,103 +90,21 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
     private String getNameLastname(String data) {
         String returningData;
         URL url;
-        HttpURLConnection connectionURL = null;
-        InputStream is = null;
-        BufferedReader br = null;
+
         try {
             // Go to the URL of PHP file to get the name and lastname of the given username
-            url = new URL("https://gestmans.000webhostapp.com/PHP/get_name_lastname.php?string=" + data);
-
-            // Open link and get text shown (JSON format)
-            connectionURL = (HttpURLConnection) url.openConnection();
-            is = connectionURL.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is));
-            returningData = br.readLine();
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
+            url = new URL("https://gestmans.000webhostapp.com/PHP/login/get_name_lastname.php?string=" + data);
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - Web URL", url.toString());
+            returningData = getJSONWeb(url);
 
             // Format the JSON to get a string of the name and lastname, removing unnecessary characters
             JSONObject initialJO = new JSONObject(returningData);
             returningData = String.valueOf(initialJO.get("success"));
             returningData = returningData.replaceAll("[^A-Za-z\\s]", "");
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - name formatted", returningData);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             returningData = "error";
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (connectionURL != null) {
-                connectionURL.disconnect();
-            }
-        }
-        return returningData;
-    }
-
-    private String loginCheck(int type, String[] data) {
-        String returningData;
-        URL url = null;
-        HttpURLConnection connectionURL = null;
-        InputStream is = null;
-        BufferedReader br = null;
-        try {
-            // Go to the URL of PHP file to check if user exist, or user and password matches or qr code exist
-            switch (type) {
-                case 0:
-                    url = new URL("https://gestmans.000webhostapp.com/PHP/username_exists.php?user=" + data[1]);
-                    break;
-                case 1:
-                    url = new URL("https://gestmans.000webhostapp.com/PHP/username_password_matches.php?user=" + data[1] + "&password=" + data[2]);
-                    break;
-                case 2:
-                    url = new URL("https://gestmans.000webhostapp.com/PHP/qr_code_exists.php?qr=" + data[1]);
-                    break;
-            }
-
-            // Open link and get text shown (JSON format)
-            connectionURL = (HttpURLConnection) url.openConnection();
-            is = connectionURL.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is));
-            returningData = br.readLine();
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
-
-            // Format the JSON to get a string of the received rows
-            JSONObject initialJO = new JSONObject(returningData);
-            int rowsSelected = (int) initialJO.get("success");
-            returningData = String.valueOf(rowsSelected);
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            returningData = "-1";
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (connectionURL != null) {
-                connectionURL.disconnect();
-            }
         }
         return returningData;
     }
@@ -359,23 +112,16 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
     private String roomTables(boolean available) {
         String returningData;
         URL url;
-        HttpURLConnection connectionURL = null;
-        InputStream is = null;
-        BufferedReader br = null;
+
         try {
             // Go to the URL of PHP file to get the available / unavailable tables
             if (available) {
-                url = new URL("https://gestmans.000webhostapp.com/PHP/select_available_room_tables.php?table=roomTables");
+                url = new URL("https://gestmans.000webhostapp.com/PHP/app/tables/select_available_room_tables.php?table=roomTables");
             } else {
-                url = new URL("https://gestmans.000webhostapp.com/PHP/select_unavailable_room_tables.php?table=roomTables");
+                url = new URL("https://gestmans.000webhostapp.com/PHP/app/tables/select_unavailable_room_tables.php?table=roomTables");
             }
-
-            // Open link and get text shown (JSON format)
-            connectionURL = (HttpURLConnection) url.openConnection();
-            is = connectionURL.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is));
-            returningData = br.readLine();
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - Web URL", url.toString());
+            returningData = getJSONWeb(url);
 
             // Format the JSON to get a string of the different items, split by '-'
             JSONObject initialJO = new JSONObject(returningData);
@@ -383,9 +129,9 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             returningData = "";
             for (int i = 0; i < outerArray.length(); i++) {
                 JSONArray innerArray = (JSONArray) outerArray.get(i);
-                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), innerArray.toString());
+                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - inner JA", innerArray.toString());
                 String numTable = (String) innerArray.get(0);
-                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), numTable);
+                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - numTable", numTable);
                 returningData += numTable + "-";
             }
 
@@ -394,6 +140,102 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
             returningData = "error";
+        }
+        return returningData;
+    }
+
+    private String getDishType() {
+        String returningData;
+        URL url;
+
+        try {
+            // Go to the URL of PHP file to get the multiple dish types
+            url = new URL("https://gestmans.000webhostapp.com/PHP/app/dishes/get_dish_type.php");
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - Web URL", url.toString());
+            returningData = getJSONWeb(url);
+
+            // Format the JSOn received to String
+            returningData = formatJSONSimple(returningData);
+
+            // Personalized sort array
+            returningData = HelperClass.sortArray(returningData.split("-"));
+
+            // If there are menus, add it
+            if (thereAreMenus()) {
+                returningData += "menu";
+            } else {
+                // Erase the leftover '-'
+                returningData = HelperClass.removeLastChar(returningData);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            returningData = "error";
+        }
+        return returningData;
+    }
+
+    private String getDishes(String typeSearch, String dishTypeOrMenu) {
+        String returningData;
+        URL url = null;
+
+        try {
+            switch (typeSearch) {
+                case "no_menu":
+                    // Go to the URL of PHP file to get Dishes of the sent dish type
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/app/dishes/get_dish_with_id.php?dish=" + dishTypeOrMenu);
+                    break;
+                case "menu":
+                    // Go to the URL of PHP file to get Dishes of the sent menu
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/app/dishes/menu/get_id_name_with_menu_id.php?idmenu=" + dishTypeOrMenu);
+                    break;
+            }
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - Web URL", url.toString());
+            returningData = getJSONWeb(url);
+
+            // Format the received JSON to String
+            returningData = formatJSONDishesToString(returningData, typeSearch, dishTypeOrMenu);
+        } catch (IOException e) {
+            e.printStackTrace();
+            returningData = "error";
+        }
+        return returningData;
+    }
+
+    private String getMenus() {
+        String returningData;
+        URL url;
+
+        try {
+            // Go to the URL of PHP file to get available menus
+            url = new URL("https://gestmans.000webhostapp.com/PHP/app/dishes/menu/get_menu.php");
+            returningData = getJSONWeb(url);
+
+            // Format the JSOn received to String
+            returningData = formatJSONSimple(returningData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            returningData = "error";
+        }
+        return returningData;
+    }
+
+    private static String getJSONWeb(URL url) {
+        HttpURLConnection connectionURL = null;
+        InputStream is = null;
+        BufferedReader br = null;
+        String returningData;
+
+        try {
+            // Open link and get text sent by PHP (JSON format)
+            connectionURL = (HttpURLConnection) url.openConnection();
+            is = connectionURL.getInputStream();
+            br = new BufferedReader(new InputStreamReader(is));
+            returningData = br.readLine();
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - Web Data", returningData);
+            return returningData;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
         } finally {
             try {
                 if (br != null) {
@@ -413,55 +255,95 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
                 connectionURL.disconnect();
             }
         }
-        return returningData;
+    }
+
+    private static String formatJSONSimple(String data) {
+        try {
+            // Format the JSON to get a string of the different items, split by '-'
+            JSONObject initialJo = new JSONObject(data);
+
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), initialJo.toString());
+            data = "";
+            JSONArray ja = (JSONArray) initialJo.get("success");
+            for (int i = 0; i < ja.length(); i++) {
+                String dishType = (String) ja.get(i);
+                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), dishType);
+                data += dishType + "-";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Erase the leftover '-'
+        data = HelperClass.removeLastChar(data);
+
+        return data;
+    }
+
+    private static String formatJSONDishesToString(String data, String typeSearch, String dishType) {
+        try {
+            // Format the JSON to get a string of the different items, split by '-'
+            JSONObject initialJo = new JSONObject(data);
+            data = "";
+            JSONArray ja = null;
+            switch (typeSearch) {
+                case "menu":
+                    ja = initialJo.getJSONArray("menu");
+                    break;
+                case "no_menu":
+                    ja = initialJo.getJSONArray(dishType);
+                    break;
+            }
+
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - initial JA", ja.toString());
+
+            // Check if there are dishes in the menu
+            if (ja.length() > 0) {
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONArray dishArray = (JSONArray) ja.get(i);
+                    Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - menuArray", dishArray.toString());
+                    for (int j = 0; j < dishArray.length(); j++) {
+                        String partDish = String.valueOf(dishArray.get(j));
+                        data += partDish + ",";
+                    }
+                    data = HelperClass.removeLastChar(data);
+                    data += "-";
+                }
+
+                // Erase the leftover '-'
+                data = HelperClass.removeLastChar(data);
+            }
+
+            // If not, send an empty string
+            else {
+                data = "empty";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 
     private static boolean thereAreMenus() {
         String returningData;
         URL url;
-        HttpURLConnection connectionURL = null;
-        InputStream is = null;
-        BufferedReader br = null;
         boolean thereAreMenus = false;
+
         try {
             // Go to the URL of PHP file to get Dishes of the sent dish type
-            url = new URL("https://gestmans.000webhostapp.com/PHP/get_menu.php");
-
-            // Open link and get text shown (JSON format)
-            connectionURL = (HttpURLConnection) url.openConnection();
-            is = connectionURL.getInputStream();
-            br = new BufferedReader(new InputStreamReader(is));
-            returningData = br.readLine();
-            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), returningData);
+            url = new URL("https://gestmans.000webhostapp.com/PHP/app/dishes/menu/get_menu.php");
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - Web URL", url.toString());
+            returningData = getJSONWeb(url);
 
             // Format the JSON to get a string of the different items, split by '-'
             JSONObject initialJo = new JSONObject(returningData);
-            returningData = "";
             JSONArray ja = (JSONArray) initialJo.get("success");
             if (ja.length() > 0) {
                 thereAreMenus = true;
+                Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - thereAreMenus", "There are menus");
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            returningData = "error";
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (connectionURL != null) {
-                connectionURL.disconnect();
-            }
         }
         return thereAreMenus;
     }

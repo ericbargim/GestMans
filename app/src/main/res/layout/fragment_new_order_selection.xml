@@ -7,12 +7,13 @@
     android:background="@color/purpleGradient">
 
     <TextView
-        android:id="@+id/tvTitleNewSelection"
+        android:id="@+id/tvTitleSelectionNew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:text="@string/NEW_ORDER"
         android:textColor="@color/white"
@@ -27,19 +28,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/lvDishesNew"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitleNewSelection">
+        app:layout_constraintTop_toBottomOf="@+id/tvTitleSelectionNew">
 
         <Spinner
             android:id="@+id/spDishTypeNew"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_gravity="center"
             android:layout_weight="2"
             android:backgroundTint="@color/white" />
@@ -61,57 +62,117 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/component_round"
         android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/lvOrderNew"
+        app:layout_constraintBottom_toTopOf="@+id/rlLvsOrderNew"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llDishDismissNew" />
 
-    <ListView
-        android:id="@+id/lvOrderNew"
+    <RelativeLayout
+        android:id="@+id/rlLvsOrderNew"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/component_round"
-        android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnCreateOrder"
+        app:layout_constraintBottom_toTopOf="@+id/rgDishMenuNew"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvDishesNew" />
+        app:layout_constraintTop_toBottomOf="@+id/lvDishesNew">
 
-    <Button
-        android:id="@+id/btnOrderNotesNew"
-        android:layout_width="0dp"
+        <ListView
+            android:id="@+id/lvOrderDishesNew"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp" />
+
+        <ListView
+            android:id="@+id/lvOrderMenusNew"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp" />
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/rgDishMenuNew"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/component_round"
-        android:text="@string/ORDER_NOTES"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnCreateOrder"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvOrderNew" />
-
-    <Button
-        android:id="@+id/btnCreateOrder"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/component_round"
-        android:text="@string/NEW_ORDER_SELECTION_CREATE_TICKET"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/llBottomButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnOrderNotesNew"
-        app:layout_constraintTop_toBottomOf="@+id/lvOrderNew" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rlLvsOrderNew">
+
+        <RadioButton
+            android:id="@+id/rbDishesNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:buttonTint="@color/white"
+            android:gravity="center"
+            android:text="@string/ORDER_DISHES"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/rbMenusNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="2"
+            android:buttonTint="@color/white"
+            android:gravity="center"
+            android:text="@string/ORDER_MENUS"
+            android:textColor="@color/white" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/llBottomButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rgDishMenuNew">
+
+        <Button
+            android:id="@+id/btnOrderNotesNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="2"
+            android:background="@drawable/component_round"
+            android:text="@string/ORDER_NOTES" />
+
+        <Button
+            android:id="@+id/btnCreateOrderNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="2"
+            android:background="@drawable/component_round"
+            android:text="@string/NEW_ORDER_SELECTION_CREATE_ORDER" />
+
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

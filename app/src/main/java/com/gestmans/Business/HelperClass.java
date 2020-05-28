@@ -20,7 +20,8 @@ import java.util.List;
 
 public class HelperClass {
 
-    public static final String[] orderDishes = new String[]{"starter", "first", "second", "dessert", "drink", "menu"};
+    public static final String[] orderDishTypes = new String[]{"drink", "starter", "first", "second", "dessert", "menu"};
+    public static final String[] menuDishTypes = new String[]{"drink", "first", "second", "dessert"};
 
     public static void createDialogMessageSingle(String title, String message, String buttonMessage, Context context) {
         // Create the dialog
@@ -99,7 +100,7 @@ public class HelperClass {
 
     public static String sortArray(String[] givenDishesTypes) {
         ArrayList<String> al = new ArrayList<>();
-        for (String orderDish : orderDishes) {
+        for (String orderDish : orderDishTypes) {
             for (String givenDishesType : givenDishesTypes) {
                 if (givenDishesType.equals(orderDish)) {
                     al.add(givenDishesType);
@@ -111,6 +112,7 @@ public class HelperClass {
         for (String element : al) {
             returningData += element + "-";
         }
+        Log.d(App.getContext().getString(R.string.HELPER_CLASS) + " - sortArray", returningData);
         return returningData;
     }
 
@@ -118,7 +120,7 @@ public class HelperClass {
         try {
             // Erase the leftover '-'
             givenString = givenString.substring(0, givenString.length() - 1);
-            Log.d(App.getContext().getString(R.string.HELPER_CLASS), givenString);
+            Log.d(App.getContext().getString(R.string.HELPER_CLASS) + " - removeLastChar", givenString);
             return givenString;
         } catch (StringIndexOutOfBoundsException ex) {
             return "error";

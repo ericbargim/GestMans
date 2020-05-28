@@ -16,10 +16,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.gestmans.Business.DataClass;
-import com.gestmans.Business.HelperClass;
 import com.gestmans.R;
 
-public class OrderDetailDialog extends AppCompatDialogFragment {
+public class OrderNotesDialog extends AppCompatDialogFragment {
 
     private EditText etOrderDetail;
     private Button btnSaveOrderDetail;
@@ -30,7 +29,7 @@ public class OrderDetailDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialog);
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_order_detail, null);
+        View view = inflater.inflate(R.layout.dialog_order_notes, null);
         etOrderDetail = view.findViewById(R.id.etOrderDetail);
         btnSaveOrderDetail = view.findViewById(R.id.btnSaveOrderDetail);
         builder.setView(view)
@@ -44,27 +43,27 @@ public class OrderDetailDialog extends AppCompatDialogFragment {
         }
         btnSaveOrderDetail.setOnClickListener(v -> {
             try {
+                if (String.valueOf(etOrderDetail.getText()).equals("")) {
+                    throw new NullPointerException();
+                }
                 DataClass.orderNotes = String.valueOf(etOrderDetail.getText());
                 dialog.dismiss();
             } catch (NullPointerException e) {
-                Toast.makeText(getActivity(), "Please, enter a valid order detail.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Please, enter a valid order note.", Toast.LENGTH_SHORT).show();
             }
 
         });
 
-        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    if (event.getAction() != KeyEvent.ACTION_DOWN)
-                        return true;
-                    else {
-                        dismissDialog();
-                        return true;
-                    }
+        dialog.setOnKeyListener((dialog, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (event.getAction() != KeyEvent.ACTION_DOWN)
+                    return true;
+                else {
+                    dismissDialog();
+                    return true;
                 }
-                return true;
             }
+            return true;
         });
         return dialog;
     }
@@ -73,7 +72,7 @@ public class OrderDetailDialog extends AppCompatDialogFragment {
         // Create dialog to confirm the dismiss
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialog);
         builder.setTitle(getString(R.string.ORDER_NOTES))
-                .setMessage(getString(R.string.ORDER_DETAILS_MESSAGE))
+                .setMessage(getString(R.string.ORDER_DETAILS_DISMISS_MESSAGE))
                 .setNegativeButton(getString(R.string.NO), (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(getString(R.string.YES), (dialog, which) -> this.dialog.dismiss())
                 .create();

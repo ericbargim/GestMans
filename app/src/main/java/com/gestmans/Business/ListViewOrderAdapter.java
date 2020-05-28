@@ -18,7 +18,7 @@ import com.gestmans.R;
 
 import java.util.ArrayList;
 
-public class ListViewTicketAdapter extends ArrayAdapter<Dish> {
+public class ListViewOrderAdapter extends ArrayAdapter<Dish> {
     private Context context;
     private ArrayList<Dish> dishes;
 
@@ -28,7 +28,7 @@ public class ListViewTicketAdapter extends ArrayAdapter<Dish> {
     private ImageButton btnAdd;
     private ImageButton btnRemove;
 
-    public ListViewTicketAdapter(Context context, ArrayList<Dish> dishes) {
+    public ListViewOrderAdapter(Context context, ArrayList<Dish> dishes) {
         super(context, 0, dishes);
         this.dishes = dishes;
         this.context = context;
@@ -42,7 +42,7 @@ public class ListViewTicketAdapter extends ArrayAdapter<Dish> {
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_ticket, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_order, parent, false);
         }
 
         // Find references on XML
