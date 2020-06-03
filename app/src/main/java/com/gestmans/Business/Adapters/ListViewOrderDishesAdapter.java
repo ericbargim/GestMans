@@ -78,13 +78,13 @@ public class ListViewOrderDishesAdapter extends ArrayAdapter<Dish> {
             builder.setTitle(App.getContext().getString(R.string.WARNING))
                     .setMessage(App.getContext().getString(R.string.ORDER_QUESTION_REMOVE_DISH, dish.getName()))
                     .setPositiveButton(App.getContext().getString(R.string.YES), (dialog, which) -> {
-                        Log.d(App.getContext().getString(R.string.LIST_VIEW_TICKET_ADAPTER_CLASS), "Positive clicked");
+                        Log.d(App.getContext().getString(R.string.LIST_VIEW_ORDER_DISHES_ADAPTER_CLASS) + "Remove dish", "Positive clicked");
                         dishes.remove(position);
                         notifyDataSetChanged();
                         dialog.dismiss();
                     })
                     .setNegativeButton(App.getContext().getString(R.string.NO), (dialog, which) -> {
-                        Log.d(App.getContext().getString(R.string.LIST_VIEW_TICKET_ADAPTER_CLASS), "Negative clicked");
+                        Log.d(App.getContext().getString(R.string.LIST_VIEW_ORDER_DISHES_ADAPTER_CLASS) + "Remove dish", "Negative clicked");
                         dialog.dismiss();
                     })
                     .create();

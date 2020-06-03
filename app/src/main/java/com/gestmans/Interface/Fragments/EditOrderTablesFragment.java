@@ -64,15 +64,13 @@ public class EditOrderTablesFragment extends Fragment {
 
                 // When item in ListView is clicked
                 lvTablesEdit.setOnItemClickListener((parent, view, position, id) -> {
-                    Log.d(getString(R.string.EDIT_ORDER_TABLES_FRAGMENT), lvTablesEdit.getItemAtPosition(position).toString());
+                    Log.d(getString(R.string.EDIT_ORDER_TABLES_FRAGMENT) + "Selected table", lvTablesEdit.getItemAtPosition(position).toString());
 
                     // Load the fragment giving it the table selected
                     EditOrderSelectionFragment fragment = new EditOrderSelectionFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("table", lvTablesEdit.getItemAtPosition(position).toString());
                     fragment.setArguments(bundle);
-
-                    Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), lvTablesEdit.getItemAtPosition(position).toString());
 
                     // Go to the fragment
                     getFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)

@@ -1,5 +1,6 @@
 package com.gestmans.Interface.Fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -77,7 +78,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
         try {
             if (bundle.getString("table") != null) {
                 table[0] = bundle.getString("table");
-                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), table[0]);
+                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Table", table[0]);
             }
 
             // Set table number on title or go back
@@ -91,7 +92,6 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
             final String[] data = {""};
             try {
                 data[0] = new FetchDataPHP().execute("get_dish_type").get();
-                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), data[0]);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -114,9 +114,8 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                     if (!dishTypeSelected.equals("menu")) {
                         try {
                             // Get the dishes of the selected dish type
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), dishTypeSelected);
+                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Dish type selected", dishTypeSelected);
                             data = new FetchDataPHP().execute("get_dish_names", "no_menu", dishTypeSelected).get();
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), data);
 
                             if (!(data.equals("empty") || data.equals("error"))) {
                                 // Add the dishes to the list
@@ -129,13 +128,13 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                                     String dishId = allDish[1];
                                     String dishType = allDish[2];
                                     Dish dishObject = new Dish(dishId, dishName, dishType, 1);
-                                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + " - Check dish creation", dishObject.toString());
+                                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Check dish creation", dishObject.toString());
                                     allDishes.add(dishObject);
                                 }
 
                                 // Check dishes successfully added to List
                                 for (Dish dish : allDishes) {
-                                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + " - Check dishes list", dish.toString());
+                                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Check dishes list", dish.toString());
                                 }
 
                                 // Add the List to the ListView with an ArrayAdapter
@@ -162,7 +161,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                     } else {
                         try {
                             // Get the dishes of the selected dish type
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), dishTypeSelected);
+                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Dish type selected", dishTypeSelected);
                             data = new FetchDataPHP().execute("get_menus", dishTypeSelected).get();
 
                             // Add the dishes to the list
@@ -188,7 +187,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                 if (spDishType.getSelectedItem().toString().toLowerCase().equals("menu")) {
                     // Get the name of the selected menu
                     String menu = lvDishes.getItemAtPosition(position).toString();
-                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), menu);
+                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Menu selected", menu);
 
                     // Create the OrderMenuDialogFragment
                     OrderMenuDialog dialog = new OrderMenuDialog();
@@ -211,7 +210,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
 
                 // If the dishType has no dishes, don't do anything
                 else if (lvDishes.getItemAtPosition(position).toString().equals("No dishes on this dish type.")) {
-                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Selected when there are no dishes");
+                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Menu selected", "Selected when there are no dishes");
                 }
 
                 // If an error occurred while retrieving dishes
@@ -223,7 +222,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                 else {
                     boolean isInArray = false;
                     Dish dish = (Dish) parent.getAdapter().getItem(position);
-                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), dish.toString());
+                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Dish selected", dish.toString());
                     ListAdapter adapter = adapterOrderDishes;
                     try {
                         for (int i = 0; i < adapter.getCount(); i++) {
@@ -236,14 +235,14 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                             }
                         }
                     } catch (NullPointerException e) {
-                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Exception caught. No items in array.");
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Dish in array", "Exception caught. No items in array.");
                         e.printStackTrace();
                     }
 
                     // If is not in the array, add it
                     if (!isInArray) {
                         // Reset quantity of the dish and add it to the ArrayAdapter
-                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Dish not in Array. Resetting quantity");
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Dish in array", "Dish not in Array. Resetting quantity");
                         dish.setQuantity(1);
                         adapterOrderDishes.add(dish);
                     }
@@ -254,22 +253,15 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                 }
             });
 
-            lvOrderMenus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
             rgDishMenu.setOnCheckedChangeListener((group, checkedId) -> {
                 switch (checkedId) {
                     case R.id.rbDishesNew:
-                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + " - radioButtons", "Visibility: Dishes.");
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "RadioGroup clicked", "Visibility: Dishes.");
                         lvOrderDishes.setVisibility(View.VISIBLE);
                         lvOrderMenus.setVisibility(View.GONE);
                         break;
                     case R.id.rbMenusNew:
-                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + " - radioButtons", "Visibility: Menus.");
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "RadioGroup clicked", "Visibility: Menus.");
                         lvOrderMenus.setVisibility(View.VISIBLE);
                         lvOrderDishes.setVisibility(View.GONE);
                         break;
@@ -303,12 +295,12 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                         // Add the table number
                         numTable = table[0].split(" ")[1];
                         jsonItems.put("table", numTable);
-                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Table number", jsonItems.toString());
 
                         // Add the employee who made the order
                         employee = DataClass.username;
                         jsonItems.put("employee", employee);
-                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Employee", jsonItems.toString());
 
                         // Add the order notes (if it has)
                         try {
@@ -321,7 +313,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                             orderNotes = "null";
                         }
                         jsonItems.put("notes", orderNotes);
-                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Notes", jsonItems.toString());
 
                         // If ListViewOrderDishes has items
                         if (!adapterOrderDishes.isEmpty()) {
@@ -338,7 +330,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                                     // Add the dish type and the returning empty array
                                     jsonItems.put(HelperClass.orderDishTypes[i], HelperClass.emptyJSON());
                                 }
-                                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+                                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Dishes", jsonItems.toString());
                             }
                         }
 
@@ -348,14 +340,14 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                                 // Add the dish type and the returning empty array
                                 jsonItems.put(HelperClass.orderDishTypes[i], HelperClass.emptyJSON());
                             }
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Dishes", jsonItems.toString());
                         }
 
                         // If ListViewOrderMenus has items
                         if (!adapterOrderMenus.isEmpty()) {
                             // Transform all menus to JSON and add it to the JSONObject "items"
                             jsonItems.put("menus", HelperClass.menusToJSON(adapterOrderMenus));
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), jsonItems.toString());
+                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Menus", jsonItems.toString());
 
                         }
 
@@ -363,17 +355,17 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                         else {
                             // Add the menu and the returning empty array
                             jsonItems.put("menus", HelperClass.emptyJSON());
+                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Menus", jsonItems.toString());
                         }
 
                         // Finally, create an "order" object with the created JSONArray
                         jsonObjectAll.put("order", jsonItems);
                         returningJson = jsonObjectAll.toString();
-                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), returningJson);
+                        Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Returning JSON", returningJson);
 
                         try {
                             // Send the JSON to process the order
                             data[0] = new FetchDataPHP().execute("process_order", returningJson).get();
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), data[0]);
                         } catch (ExecutionException | InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -381,7 +373,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                         // If the returned value is error
                         if (data[0].equals("error")) {
                             // Show a dialog with an error sending message
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Error sending the order");
+                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Order", "Error sending the order.");
                             HelperClass.createDialogMessageSingle(getString(R.string.ERROR),
                                     getString(R.string.ORDER_CREATION_ERROR_SENDING_ORDER_MESSAGE),
                                     getString(R.string.OK),
@@ -391,7 +383,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                         // If the returned value is 0
                         else if (data[0].equals("0")) {
                             // Show a dialog with an error receiving message
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "No rows were inserted");
+                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Order", "Error receiving response from PHP.");
                             HelperClass.createDialogMessageSingle(getString(R.string.ERROR),
                                     getString(R.string.ORDER_CREATION_ERROR_RECEIVED_ORDER_MESSAGE),
                                     getString(R.string.OK),
@@ -400,49 +392,17 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
 
                         // If is different than 0 or error (will be 1)
                         else {
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Rows were inserted");
+                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Order", "Rows inserted. Order created.");
 
-                            // Change the "available" boolean on the DB
-                            try {
-                                // Send the JSON to process the order
-                                data[0] = new FetchDataPHP().execute("change_state_available", numTable).get();
-                                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), data[0]);
-                            } catch (ExecutionException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                            // Show a confirmation Toast message
+                            Toast.makeText(getActivity(), "Order successfully created", Toast.LENGTH_SHORT).show();
 
-                            // If the returned value is error
-                            if (data[0].equals("error")) {
-                                // Show a dialog with an error receiving message
-                                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Error changing the table availability");
-                                HelperClass.createDialogMessageSingle(getString(R.string.ERROR),
-                                        getString(R.string.ORDER_CREATION_ERROR_SENDING_BOOL_MESSAGE),
-                                        getString(R.string.OK),
-                                        getContext());
-                            }
+                            // Clear the order notes
+                            DataClass.orderNotes = null;
 
-                            // If the returned value is 0
-                            else if (data[0].equals("0")) {
-                                // Show a dialog with an error receiving message
-                                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Room availability not changed");
-                                HelperClass.createDialogMessageSingle(getString(R.string.ERROR),
-                                        getString(R.string.ORDER_CREATION_ERROR_RECEIVED_BOOL_MESSAGE),
-                                        getString(R.string.OK),
-                                        getContext());
-                            }
-
-                            // If is different than 0 or error (will be 1)
-                            else {
-                                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Room availability changed");
-
-                                // Show a confirmation Toast message
-                                Toast.makeText(getActivity(), "Order successfully created", Toast.LENGTH_SHORT).show();
-
-                                // Go back to Home
-                                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                            }
+                            // Go back to Home
+                            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -457,8 +417,9 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
 
             // When dismiss button is clicked
             btnDismiss.setOnClickListener(v -> dismissDialog());
-        } catch (NullPointerException ex) {
-            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Null table!!! Crash incoming!!!");
+        } catch (
+                NullPointerException ex) {
+            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Table", "Null table!!! Crash incoming!!!");
             Toast.makeText(getActivity(), "Error while retrieving the table", Toast.LENGTH_SHORT).show();
             getFragmentManager().popBackStack();
         }
@@ -496,21 +457,21 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
     @Override
     public void onMenuCreatedSubmit(Menu menu) {
         if (!adapterOrderMenus.isEmpty()) {
-            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "AdapterMenu is not empty.");
+            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Adapter order menus", "AdapterMenu is not empty.");
             int index = HelperClass.checkIfMenuExists(adapterOrderMenus, menu);
             if (index != -1) {
-                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Menu already exist. Adding one to quantity.");
+                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Adapter order menus", "Menu already exist. Adding one to quantity.");
                 adapterOrderMenus.getItem(index).addToQuantity();
                 adapterOrderMenus.notifyDataSetChanged();
                 lvOrderMenus.setAdapter(adapterOrderMenus);
             } else {
-                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "Menu does not exist. Adding it.");
+                Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Adapter order menus", "Menu does not exist. Adding it.");
                 adapterOrderMenus.add(menu);
                 adapterOrderMenus.notifyDataSetChanged();
                 lvOrderMenus.setAdapter(adapterOrderMenus);
             }
         } else {
-            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), "AdapterMenu is empty.");
+            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Adapter order menus", "AdapterMenu is empty.");
             adapterOrderMenus.add(menu);
             adapterOrderMenus.notifyDataSetChanged();
             lvOrderMenus.setAdapter(adapterOrderMenus);

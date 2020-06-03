@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -23,11 +24,12 @@ public class ListViewOrderMenusAdapter extends ArrayAdapter<Menu> {
     private Context context;
     private ArrayList<Menu> menus;
 
-    private TextView tvName;
-    private ImageButton btnSubtract;
-    private TextView tvQuantity;
-    private ImageButton btnAdd;
-    private ImageButton btnRemove;
+    private TextView tvName, tvQuantity;
+    private ImageButton btnSubtract, btnAdd, btnRemove;
+
+    private TextView tvMenuNameInfo, tvMenuQuantityInfo, tvDishDrinkInfo,
+            tvDishFirstInfo, tvDishSecondInfo, tvDishDessertInfo;
+    private Button btnCloseInfo;
 
     public ListViewOrderMenusAdapter(Context context, ArrayList<Menu> menus) {
         super(context, 0, menus);
@@ -57,6 +59,31 @@ public class ListViewOrderMenusAdapter extends ArrayAdapter<Menu> {
         tvName.setText(menu.getMenuName());
         tvQuantity.setText(Integer.toString(menu.getMenuQuantity()));
 
+        // If the menu name is clicked
+        tvName.setOnClickListener(v -> {
+            Log.d(App.getContext().getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Menu info", "Menu clicked.");
+
+            // Build and show a quick menu info dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
+            View view = (LayoutInflater.from(context)).inflate(R.layout.dialog_info_menu, null);
+            referencesPrompt(view);
+            builder.setView(view)
+                    .setCancelable(true);
+            final AlertDialog dialog = builder.show();
+            dialog.show();
+
+            // Show the info of the menu
+            tvMenuNameInfo.setText(menu.getMenuName());
+            tvMenuQuantityInfo.setText(Integer.toString(menu.getMenuQuantity()));
+            tvDishDrinkInfo.setText(menu.getDishDrink().getName());
+            tvDishFirstInfo.setText(menu.getDishFirst().getName());
+            tvDishSecondInfo.setText(menu.getDishSecond().getName());
+            tvDishDessertInfo.setText(menu.getDishDessert().getName());
+
+            // If the "OK" button is clicked, close the dialog
+            btnCloseInfo.setOnClickListener(v1 -> dialog.dismiss());
+        });
+
         // Add button listener
         btnAdd.setOnClickListener(v -> {
             menu.addToQuantity();
@@ -76,15 +103,15 @@ public class ListViewOrderMenusAdapter extends ArrayAdapter<Menu> {
             // Create dialog to confirm deleting the selected dish
             AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
             builder.setTitle(App.getContext().getString(R.string.WARNING))
-                    .setMessage(App.getContext().getString(R.string.ORDER_QUESTION_REMOVE_DISH, menu.getMenuName()))
+                    .setMessage(App.getContext().getString(R.string.ORDER_QUESTION_REMOVE_MENU, menu.getMenuName()))
                     .setPositiveButton(App.getContext().getString(R.string.YES), (dialog, which) -> {
-                        Log.d(App.getContext().getString(R.string.LIST_VIEW_TICKET_ADAPTER_CLASS), "Positive clicked");
+                        Log.d(App.getContext().getString(R.string.LIST_VIEW_ORDER_MENUS_ADAPTER_CLASS) + "Remove menu", "Positive clicked");
                         menus.remove(position);
                         notifyDataSetChanged();
                         dialog.dismiss();
                     })
                     .setNegativeButton(App.getContext().getString(R.string.NO), (dialog, which) -> {
-                        Log.d(App.getContext().getString(R.string.LIST_VIEW_TICKET_ADAPTER_CLASS), "Negative clicked");
+                        Log.d(App.getContext().getString(R.string.LIST_VIEW_ORDER_MENUS_ADAPTER_CLASS) + "Remove menu", "Negative clicked");
                         dialog.dismiss();
                     })
                     .create();
@@ -99,5 +126,15 @@ public class ListViewOrderMenusAdapter extends ArrayAdapter<Menu> {
         });
 
         return convertView;
+    }
+
+    private void referencesPrompt(View view) {
+        tvMenuNameInfo = view.findViewById(R.id.tvMenuNameContentInfo);
+        tvMenuQuantityInfo = view.findViewById(R.id.tvMenuQuantityContentInfo);
+        tvDishDrinkInfo = view.findViewById(R.id.tvDishDrinkContentInfo);
+        tvDishFirstInfo = view.findViewById(R.id.tvDishFirstContentInfo);
+        tvDishSecondInfo = view.findViewById(R.id.tvDishSecondContentInfo);
+        tvDishDessertInfo = view.findViewById(R.id.tvDishDessertContentInfo);
+        btnCloseInfo = view.findViewById(R.id.btnCloseMenuInfo);
     }
 }

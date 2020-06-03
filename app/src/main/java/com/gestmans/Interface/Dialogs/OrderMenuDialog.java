@@ -67,7 +67,7 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
 
             // Get the dishes of the selected menu
             String data = new FetchDataPHP().execute("get_dishes_menu", "menu", menuName).get();
-            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), data);
+            Log.d(getString(R.string.ORDER_MENU_DIALOG) + "Received data", data);
 
             // Split the data string
             String[] allDishes = data.split("-");
@@ -87,7 +87,7 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
                 String dishId = actualDishParts[1];
                 String dishType = actualDishParts[2];
                 Dish dishObject = new Dish(dishId, dishName, dishType, 1);
-                Log.d(getString(R.string.ORDER_MENU_DIALOG) + " - Check dish creation", dishObject.toString());
+                Log.d(getString(R.string.ORDER_MENU_DIALOG) + "Check dish creation", dishObject.toString());
                 switch (dishObject.getDishType()) {
                     case "drink":
                         alDrinks.add(dishObject);
@@ -133,7 +133,7 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
 
                 // Create the menu object
                 Menu menu = new Menu(menuName, 1, drink, first, second, dessert);
-                Log.d(getString(R.string.ORDER_MENU_DIALOG) + " - showing menu", menu.toString());
+                Log.d(getString(R.string.ORDER_MENU_DIALOG) + "Menu created", menu.toString());
 
                 // Add the menu object to the ListViewMenu
                 callback.onMenuCreatedSubmit(menu);

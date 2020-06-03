@@ -64,15 +64,13 @@ public class NewOrderTablesFragment extends Fragment {
             if (!al.get(0).equals(getString(R.string.ORDER_TABLES_NO_TABLES))) {
                 // When item in ListView is clicked
                 lvTablesNew.setOnItemClickListener((parent, view, position, id) -> {
-                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), lvTablesNew.getItemAtPosition(position).toString());
+                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Table selected", lvTablesNew.getItemAtPosition(position).toString());
 
                     // Load the fragment giving it the table selected
                     NewOrderSelectionFragment fragment = new NewOrderSelectionFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("table", lvTablesNew.getItemAtPosition(position).toString());
                     fragment.setArguments(bundle);
-
-                    Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), lvTablesNew.getItemAtPosition(position).toString());
 
                     // Go to the fragment
                     getFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)

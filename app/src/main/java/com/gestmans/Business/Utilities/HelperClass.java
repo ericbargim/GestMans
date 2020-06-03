@@ -96,7 +96,7 @@ public class HelperClass {
         for (String element : al) {
             returningData += element + "-";
         }
-        Log.d(App.getContext().getString(R.string.HELPER_CLASS) + " - sortArray", returningData);
+        Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Sorted array", returningData);
         return returningData;
     }
 
@@ -104,7 +104,7 @@ public class HelperClass {
         try {
             // Erase the leftover '-'
             givenString = givenString.substring(0, givenString.length() - 1);
-            Log.d(App.getContext().getString(R.string.HELPER_CLASS) + " - removeLastChar", givenString);
+            Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Last char removed", givenString);
             return givenString;
         } catch (StringIndexOutOfBoundsException ex) {
             return "error";
@@ -147,8 +147,8 @@ public class HelperClass {
         // Loop all the menus of the ListAdapter
         for (int i = 0; i < adapterOrderMenus.getCount(); i++) {
             Menu actualMenu = adapterOrderMenus.getItem(i);
-            Log.d(App.getContext().getString(R.string.HELPER_CLASS) + " - givenMenu", menu.toString());
-            Log.d(App.getContext().getString(R.string.HELPER_CLASS) + " - actualMenu", actualMenu.toString());
+            Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Given menu", menu.toString());
+            Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Actual menu", actualMenu.toString());
 
             // Check if both menus are equals
             // We can't use .equals() because the getMenuQuantity() will be different
@@ -181,13 +181,12 @@ public class HelperClass {
                 try {
                     // Put both ID and Quantity into a single JSONObject
                     dishPartsJSON.put("name", dishId);
-                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), dishPartsJSON.toString());
                     dishPartsJSON.put("quantity", dishQuantity);
-                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), dishPartsJSON.toString());
+                    Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Dish parts", dishPartsJSON.toString());
 
                     // And create a JSONArray with the JSONObject
                     arrayAllDishesJSON.put(dishPartsJSON);
-                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), arrayAllDishesJSON.toString());
+                    Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Array all dishes", arrayAllDishesJSON.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -211,25 +210,25 @@ public class HelperClass {
             try {
                 // Put the name name and quantity in the JSONObject
                 menuPartsJSON.put("name", menuName);
-                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Menu parts", menuPartsJSON.toString());
                 menuPartsJSON.put("quantity", menuQuantity);
-                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Menu parts", menuPartsJSON.toString());
 
                 menuPartsJSON.put(orderMenuDishTypes[0], new JSONObject().put("id", actualMenu.getDishDrink().getId()));
-                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Menu parts", menuPartsJSON.toString());
 
                 menuPartsJSON.put(orderMenuDishTypes[1], new JSONObject().put("id", actualMenu.getDishFirst().getId()));
-                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Menu parts", menuPartsJSON.toString());
 
                 menuPartsJSON.put(orderMenuDishTypes[2], new JSONObject().put("id", actualMenu.getDishSecond().getId()));
-                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Menu parts", menuPartsJSON.toString());
 
                 menuPartsJSON.put(orderMenuDishTypes[3], new JSONObject().put("id", actualMenu.getDishDessert().getId()));
-                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Menu parts", menuPartsJSON.toString());
 
                 // And create a JSONArray with the JSONObject
                 arrayAllMenusJSON.put(menuPartsJSON);
-                Log.d(App.getContext().getString(R.string.HELPER_CLASS), arrayAllMenusJSON.toString());
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Array all menus", menuPartsJSON.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }

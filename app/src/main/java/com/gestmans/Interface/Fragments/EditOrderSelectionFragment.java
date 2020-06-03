@@ -431,21 +431,21 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
     @Override
     public void onMenuCreatedSubmit(Menu menu) {
         if (!adapterOrderMenus.isEmpty()) {
-            Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), "AdapterMenu is not empty.");
+            Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Adapter order menus", "AdapterMenu is not empty.");
             int index = HelperClass.checkIfMenuExists(adapterOrderMenus, menu);
             if (index != -1) {
-                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), "Menu already exist. Adding one to quantity.");
+                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Adapter order menus", "Menu already exist. Adding one to quantity.");
                 adapterOrderMenus.getItem(index).addToQuantity();
                 adapterOrderMenus.notifyDataSetChanged();
                 lvOrderMenus.setAdapter(adapterOrderMenus);
             } else {
-                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), "Menu does not exist. Adding it.");
+                Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Adapter order menus", "Menu does not exist. Adding it.");
                 adapterOrderMenus.add(menu);
                 adapterOrderMenus.notifyDataSetChanged();
                 lvOrderMenus.setAdapter(adapterOrderMenus);
             }
         } else {
-            Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT), "AdapterMenu is empty.");
+            Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Adapter order menus", "AdapterMenu is empty.");
             adapterOrderMenus.add(menu);
             adapterOrderMenus.notifyDataSetChanged();
             lvOrderMenus.setAdapter(adapterOrderMenus);

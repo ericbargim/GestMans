@@ -78,12 +78,12 @@ public class LoginActivity extends AppCompatActivity {
                     // Check if username exist in DB
                     if (Integer.parseInt(new FetchDataPHP().execute("username_exist", username).get()) > 0) {
                         // Username exist in DB
-                        Log.d(getString(R.string.LOGIN_ACTIVITY), "Username exist. Checking password.");
+                        Log.d(getString(R.string.LOGIN_ACTIVITY) + "Check login", "Username exist. Checking password.");
 
                         // Check if password matches username in DB
                         if (Integer.parseInt(new FetchDataPHP().execute("username_password_matches", username, password).get()) > 0) {
                             // Password matches
-                            Log.d(getString(R.string.LOGIN_ACTIVITY), "Password matches.");
+                            Log.d(getString(R.string.LOGIN_ACTIVITY) + "Check login", "Password matches.");
 
                             // Save name and lastname
                             String name = new FetchDataPHP().execute("get_name_lastname", username).get();
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), AppMainActivity.class));
                         } else {
                             // Password does not match
-                            Log.d(getString(R.string.LOGIN_ACTIVITY), "Password does not match.");
+                            Log.d(getString(R.string.LOGIN_ACTIVITY) + "Check login", "Password does not match.");
 
                             // Select password TextInputEditText text
                             etPassword.requestFocus();
@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     } else {
                         // Username does not exist in DB
-                        Log.d(getString(R.string.LOGIN_ACTIVITY), "Username does not exist.");
+                        Log.d(getString(R.string.LOGIN_ACTIVITY) + "Check login", "Username does not exist.");
 
                         // Select login TextInputEditText text
                         etLogin.requestFocus();
@@ -149,17 +149,17 @@ public class LoginActivity extends AppCompatActivity {
     public static void postQRLogin(String qr) {
         // Method called from QRScannerActivity after detecting QR
         try {
-            Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY), "QR received: " + qr + ".");
+            Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY) + "Post QR login", "QR received: " + qr + ".");
 
             // Check if QR exist in DB
             if (Integer.parseInt(new FetchDataPHP().execute("qr_code_exist", qr).get()) > 0) {
-                Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY), "QR exist.");
+                Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY) + "Post QR login", "QR exist.");
                 DataClass.username = new FetchDataPHP().execute("get_name_lastname", qr).get();
                 mContext.startActivity(new Intent(App.getContext(), AppMainActivity.class));
 
                 // QR does not exist in DB
             } else {
-                Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY), "QR does not exist.");
+                Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY) + "Post QR login", "QR does not exist.");
                 HelperClass.createDialogMessageSingle("Error", "QR does not exist", "OK", mContext);
             }
         } catch (ExecutionException | InterruptedException e) {
