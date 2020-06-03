@@ -1,7 +1,6 @@
 package com.gestmans.Interface.Dialogs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.gestmans.Business.DataClass;
+import com.gestmans.Business.Utilities.DataClass;
 import com.gestmans.R;
 
 public class OrderNotesDialog extends AppCompatDialogFragment {

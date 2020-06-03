@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.gestmans.Business.DataClass;
+import com.gestmans.Business.Utilities.DataClass;
 import com.gestmans.R;
 
 public class HomeFragment extends Fragment {

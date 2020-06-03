@@ -1,4 +1,4 @@
-package com.gestmans.Business;
+package com.gestmans.Business.Utilities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +8,9 @@ import android.widget.ListAdapter;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.gestmans.Business.Adapters.ListViewOrderMenusAdapter;
 import com.gestmans.Business.Objects.Dish;
+import com.gestmans.Business.Objects.Menu;
 import com.gestmans.R;
 
 import org.json.JSONArray;
@@ -16,16 +18,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HelperClass {
 
-    public static final String[] orderDishTypes = new String[]{"drink", "starter", "first", "second", "dessert", "menu"};
-    public static final String[] menuDishTypes = new String[]{"drink", "first", "second", "dessert"};
+    public static int CAMERA_PERMISSION = 1;
+
+    public static final String[] orderDishTypes = new String[]{"drink", "starter", "first", "second", "dessert"};
+    private static final String[] orderMenuDishTypes = new String[]{"drink", "first", "second", "dessert"};
 
     public static void createDialogMessageSingle(String title, String message, String buttonMessage, Context context) {
         // Create the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
         builder.setTitle(title)
                 .setMessage(message)
                 .setNeutralButton(buttonMessage, (dialog, which) -> dialog.dismiss())
@@ -37,32 +42,6 @@ public class HelperClass {
 
         // Show the dialog
         dialog.show();
-    }
-
-    public static boolean createDialogMessageDual(String title, String message, String positiveButtonMessage, String negativeButtonMessage, Context context) {
-        final boolean[] positiveClicked = {false};
-        // Create the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(positiveButtonMessage, (dialog, which) -> {
-                    positiveClicked[0] = true;
-                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), "Positive clicked");
-                })
-                .setNegativeButton(negativeButtonMessage, (dialog, which) -> {
-                    dialog.dismiss();
-                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), "Negative clicked");
-                })
-                .create();
-        final AlertDialog dialog = builder.show();
-
-        // Change the buttons color
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getColor(R.color.purpleGradient));
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getColor(R.color.purpleGradient));
-
-        // Show the dialog
-        dialog.show();
-        return positiveClicked[0];
     }
 
     public static void showKeyboard(Activity activity) {
@@ -100,8 +79,12 @@ public class HelperClass {
 
     public static String sortArray(String[] givenDishesTypes) {
         ArrayList<String> al = new ArrayList<>();
+
+        // Loop the possible dish types
         for (String orderDish : orderDishTypes) {
+            // Loop the given dish types
             for (String givenDishesType : givenDishesTypes) {
+                // If the given dish type is on the possible dish types, add it to the List
                 if (givenDishesType.equals(orderDish)) {
                     al.add(givenDishesType);
                     break;
@@ -109,6 +92,7 @@ public class HelperClass {
             }
         }
         String returningData = "";
+        // Format the List, to return it as a string
         for (String element : al) {
             returningData += element + "-";
         }
@@ -125,6 +109,11 @@ public class HelperClass {
         } catch (StringIndexOutOfBoundsException ex) {
             return "error";
         }
+    }
+
+    public static List<String> stringToListCapitalizeLetters(String data) {
+        // Transform String to List and capitalize first letter
+        return HelperClass.capitalizeLetters(Arrays.asList(data.split("-")));
     }
 
     public static List<String> capitalizeLetters(List<String> givenList) {
@@ -152,10 +141,31 @@ public class HelperClass {
         return dishTypeExists;
     }
 
-    public static JSONArray itemsToJSON(ListAdapter listAdapter, String neededDishType) {
-        List<JSONObject> allDishes = new ArrayList<>();
+    public static int checkIfMenuExists(ListViewOrderMenusAdapter adapterOrderMenus, Menu menu) {
+        int menuExists = -1;
+
+        // Loop all the menus of the ListAdapter
+        for (int i = 0; i < adapterOrderMenus.getCount(); i++) {
+            Menu actualMenu = adapterOrderMenus.getItem(i);
+            Log.d(App.getContext().getString(R.string.HELPER_CLASS) + " - givenMenu", menu.toString());
+            Log.d(App.getContext().getString(R.string.HELPER_CLASS) + " - actualMenu", actualMenu.toString());
+
+            // Check if both menus are equals
+            // We can't use .equals() because the getMenuQuantity() will be different
+            if (menu.getMenuName().equals(actualMenu.getMenuName()) &&
+                    menu.getDishDrink().getId().equals(actualMenu.getDishDrink().getId()) &&
+                    menu.getDishFirst().getId().equals(actualMenu.getDishFirst().getId()) &&
+                    menu.getDishSecond().getId().equals(actualMenu.getDishSecond().getId()) &&
+                    menu.getDishDessert().getId().equals(actualMenu.getDishDessert().getId())) {
+                menuExists = i;
+                break;
+            }
+        }
+        return menuExists;
+    }
+
+    public static JSONArray dishesToJSON(ListAdapter listAdapter, String neededDishType) {
         JSONArray arrayAllDishesJSON = new JSONArray();
-        int numDishes = 1;
 
         // Loop the dishes of the Order ListView
         for (int i = 0; i < listAdapter.getCount(); i++) {
@@ -164,8 +174,6 @@ public class HelperClass {
             // Check if the dish is the neededDishType
             if (actualDish.getDishType().toLowerCase().equals(neededDishType)) {
                 JSONObject dishPartsJSON = new JSONObject();
-                JSONArray dishArrayJSON = new JSONArray();
-                JSONObject dishCompleteJSON = new JSONObject();
 
                 // Get the ID and Quantity of the dish
                 String dishId = actualDish.getId();
@@ -177,39 +185,61 @@ public class HelperClass {
                     dishPartsJSON.put("quantity", dishQuantity);
                     Log.d(App.getContext().getString(R.string.HELPER_CLASS), dishPartsJSON.toString());
 
-                    // Add the created dish object to an array
-                    dishArrayJSON.put(dishPartsJSON);
-                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), dishArrayJSON.toString());
-
-                    // And create a JSONObject with the index and the array
-                    dishCompleteJSON.put(String.valueOf(numDishes), dishArrayJSON);
-                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), dishCompleteJSON.toString());
-
-                    // Finally, add the object to a List
-                    allDishes.add(dishCompleteJSON);
-
-                    // And add 1 to the index counter
-                    numDishes++;
+                    // And create a JSONArray with the JSONObject
+                    arrayAllDishesJSON.put(dishPartsJSON);
+                    Log.d(App.getContext().getString(R.string.HELPER_CLASS), arrayAllDishesJSON.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }
-
-        // Loop the objects of the list
-        for (JSONObject actualObject : allDishes) {
-            // Add all the dishes objects of the list to an array
-            Log.d(App.getContext().getString(R.string.HELPER_CLASS), actualObject.toString());
-            arrayAllDishesJSON.put(actualObject);
-        }
-        Log.d(App.getContext().getString(R.string.HELPER_CLASS), arrayAllDishesJSON.toString());
-
         // Return the filled array
         return arrayAllDishesJSON;
     }
 
+    public static JSONArray menusToJSON(ListAdapter listAdapter) {
+        JSONArray arrayAllMenusJSON = new JSONArray();
+
+        // Loop the dishes of the Order ListView
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            Menu actualMenu = (Menu) listAdapter.getItem(i);
+            JSONObject menuPartsJSON = new JSONObject();
+
+            // Get the name and Quantity of the menu
+            String menuName = actualMenu.getMenuName();
+            String menuQuantity = String.valueOf(actualMenu.getMenuQuantity());
+            try {
+                // Put the name name and quantity in the JSONObject
+                menuPartsJSON.put("name", menuName);
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+                menuPartsJSON.put("quantity", menuQuantity);
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+
+                menuPartsJSON.put(orderMenuDishTypes[0], new JSONObject().put("id", actualMenu.getDishDrink().getId()));
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+
+                menuPartsJSON.put(orderMenuDishTypes[1], new JSONObject().put("id", actualMenu.getDishFirst().getId()));
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+
+                menuPartsJSON.put(orderMenuDishTypes[2], new JSONObject().put("id", actualMenu.getDishSecond().getId()));
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+
+                menuPartsJSON.put(orderMenuDishTypes[3], new JSONObject().put("id", actualMenu.getDishDessert().getId()));
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS), menuPartsJSON.toString());
+
+                // And create a JSONArray with the JSONObject
+                arrayAllMenusJSON.put(menuPartsJSON);
+                Log.d(App.getContext().getString(R.string.HELPER_CLASS), arrayAllMenusJSON.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        // Return the filled array
+        return arrayAllMenusJSON;
+    }
+
     public static JSONArray emptyJSON() {
-        // Simply return a simple array
+        // Return an empty array
         return new JSONArray();
     }
 }

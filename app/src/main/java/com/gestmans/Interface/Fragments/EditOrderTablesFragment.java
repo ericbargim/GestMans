@@ -11,8 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.gestmans.Business.FetchDataPHP;
-import com.gestmans.Interface.Dialogs.LoadingDialog;
+import com.gestmans.Business.Utilities.FetchDataPHP;
 import com.gestmans.R;
 
 import java.util.ArrayList;
@@ -22,8 +21,6 @@ import java.util.concurrent.ExecutionException;
 public class EditOrderTablesFragment extends Fragment {
 
     private ListView lvTablesEdit;
-
-    private LoadingDialog ld = null;
 
     public EditOrderTablesFragment() {
         // Required empty public constructor

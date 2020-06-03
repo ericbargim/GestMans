@@ -1,4 +1,4 @@
-package com.gestmans.Business;
+package com.gestmans.Business.Adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,14 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
-import com.gestmans.Business.Objects.Dish;
+import com.gestmans.Business.Utilities.App;
+import com.gestmans.Business.Objects.Menu;
 import com.gestmans.R;
 
 import java.util.ArrayList;
 
-public class ListViewOrderAdapter extends ArrayAdapter<Dish> {
+public class ListViewOrderMenusAdapter extends ArrayAdapter<Menu> {
     private Context context;
-    private ArrayList<Dish> dishes;
+    private ArrayList<Menu> menus;
 
     private TextView tvName;
     private ImageButton btnSubtract;
@@ -28,9 +29,9 @@ public class ListViewOrderAdapter extends ArrayAdapter<Dish> {
     private ImageButton btnAdd;
     private ImageButton btnRemove;
 
-    public ListViewOrderAdapter(Context context, ArrayList<Dish> dishes) {
-        super(context, 0, dishes);
-        this.dishes = dishes;
+    public ListViewOrderMenusAdapter(Context context, ArrayList<Menu> menus) {
+        super(context, 0, menus);
+        this.menus = menus;
         this.context = context;
     }
 
@@ -38,11 +39,11 @@ public class ListViewOrderAdapter extends ArrayAdapter<Dish> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         // Get the dish of the selected position
-        Dish dish = getItem(position);
+        Menu menu = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_order, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_order_menus, parent, false);
         }
 
         // Find references on XML
@@ -53,20 +54,20 @@ public class ListViewOrderAdapter extends ArrayAdapter<Dish> {
         btnRemove = convertView.findViewById(R.id.btnRemoveTicket);
 
         // Set text on the fields
-        tvName.setText(dish.getName());
-        tvQuantity.setText(Integer.toString(dish.getQuantity()));
+        tvName.setText(menu.getMenuName());
+        tvQuantity.setText(Integer.toString(menu.getMenuQuantity()));
 
         // Add button listener
         btnAdd.setOnClickListener(v -> {
-            dish.addToQuantity();
-            tvQuantity.setText(Integer.toString(dish.getQuantity()));
+            menu.addToQuantity();
+            tvQuantity.setText(Integer.toString(menu.getMenuQuantity()));
             notifyDataSetChanged();
         });
 
         // Add subtract listener
         btnSubtract.setOnClickListener(v -> {
-            dish.removeFromQuantity();
-            tvQuantity.setText(Integer.toString(dish.getQuantity()));
+            menu.removeFromQuantity();
+            tvQuantity.setText(Integer.toString(menu.getMenuQuantity()));
             notifyDataSetChanged();
         });
 
@@ -75,10 +76,10 @@ public class ListViewOrderAdapter extends ArrayAdapter<Dish> {
             // Create dialog to confirm deleting the selected dish
             AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
             builder.setTitle(App.getContext().getString(R.string.WARNING))
-                    .setMessage(App.getContext().getString(R.string.ORDER_QUESTION_REMOVE_DISH, dish.getName()))
+                    .setMessage(App.getContext().getString(R.string.ORDER_QUESTION_REMOVE_DISH, menu.getMenuName()))
                     .setPositiveButton(App.getContext().getString(R.string.YES), (dialog, which) -> {
                         Log.d(App.getContext().getString(R.string.LIST_VIEW_TICKET_ADAPTER_CLASS), "Positive clicked");
-                        dishes.remove(position);
+                        menus.remove(position);
                         notifyDataSetChanged();
                         dialog.dismiss();
                     })

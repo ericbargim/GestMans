@@ -1,4 +1,4 @@
-package com.gestmans.Business;
+package com.gestmans.Business.Utilities;
 
 public class DataClass {
     public static String username = null;

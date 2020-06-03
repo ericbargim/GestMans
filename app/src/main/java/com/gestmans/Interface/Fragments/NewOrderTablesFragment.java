@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.gestmans.Business.FetchDataPHP;
+import com.gestmans.Business.Utilities.FetchDataPHP;
 import com.gestmans.R;
 
 import java.util.ArrayList;
@@ -62,7 +62,6 @@ public class NewOrderTablesFragment extends Fragment {
 
             // Check if the first element is not the "error" message
             if (!al.get(0).equals(getString(R.string.ORDER_TABLES_NO_TABLES))) {
-
                 // When item in ListView is clicked
                 lvTablesNew.setOnItemClickListener((parent, view, position, id) -> {
                     Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT), lvTablesNew.getItemAtPosition(position).toString());

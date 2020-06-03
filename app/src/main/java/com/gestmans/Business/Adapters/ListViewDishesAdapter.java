@@ -1,4 +1,4 @@
-package com.gestmans.Business;
+package com.gestmans.Business.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.gestmans.Business;
+package com.gestmans.Business.Utilities;
 
 import android.app.Application;
 import android.content.Context;

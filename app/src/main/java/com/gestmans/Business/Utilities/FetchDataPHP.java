@@ -1,4 +1,4 @@
-package com.gestmans.Business;
+package com.gestmans.Business.Utilities;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -51,6 +51,12 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             case "get_menus":
                 data = getMenus();
                 break;
+            case "process_order":
+                data = processOrder(type[1]);
+                break;
+            case "change_state_available":
+                data = processOrder(type[1]);
+                break;
         }
         return data;
     }
@@ -66,7 +72,7 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
                     url = new URL("https://gestmans.000webhostapp.com/PHP/login/username_exists.php?user=" + data[1]);
                     break;
                 case 1:
-                    url = new URL("https://gestmans.000webhostapp.com/PHP/login/username_password_matches.php?user=" + data[1] + "&password=" + data[2]);
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/login/password_hash.php?user=" + data[1] + "&password=" + data[2]);
                     break;
                 case 2:
                     url = new URL("https://gestmans.000webhostapp.com/PHP/login/qr_code_exists.php?qr=" + data[1]);
@@ -75,12 +81,10 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - Web URL", url.toString());
             returningData = getJSONWeb(url);
 
-            // Format the JSON to get a string of the received rows
-            JSONObject initialJO = new JSONObject(returningData);
-            int rowsSelected = (int) initialJO.get("success");
-            returningData = String.valueOf(rowsSelected);
+            // Format the JSON received to String
+            returningData = formatJSONUniqueValueSuccess(returningData);
             Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - returned rows", returningData);
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             returningData = "-1";
         }
@@ -92,17 +96,16 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         URL url;
 
         try {
-            // Go to the URL of PHP file to get the name and lastname of the given username
+            // Go to the URL of PHP file to get the first name and last name of the given username
             url = new URL("https://gestmans.000webhostapp.com/PHP/login/get_name_lastname.php?string=" + data);
             Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - Web URL", url.toString());
             returningData = getJSONWeb(url);
 
-            // Format the JSON to get a string of the name and lastname, removing unnecessary characters
-            JSONObject initialJO = new JSONObject(returningData);
-            returningData = String.valueOf(initialJO.get("success"));
+            // Format the JSON received to String and remove unnecessary characters
+            returningData = formatJSONUniqueValueSuccess(returningData);
             returningData = returningData.replaceAll("[^A-Za-z\\s]", "");
             Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + " - name formatted", returningData);
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             returningData = "error";
         }
@@ -155,7 +158,7 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             returningData = getJSONWeb(url);
 
             // Format the JSOn received to String
-            returningData = formatJSONSimple(returningData);
+            returningData = formatJSONUniqueArray(returningData);
 
             // Personalized sort array
             returningData = HelperClass.sortArray(returningData.split("-"));
@@ -210,8 +213,26 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             url = new URL("https://gestmans.000webhostapp.com/PHP/app/dishes/menu/get_menu.php");
             returningData = getJSONWeb(url);
 
-            // Format the JSOn received to String
-            returningData = formatJSONSimple(returningData);
+            // Format the JSON received to String
+            returningData = formatJSONUniqueArray(returningData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            returningData = "error";
+        }
+        return returningData;
+    }
+
+    private String processOrder(String json) {
+        String returningData;
+        URL url;
+
+        try {
+            // Go to the URL of PHP file to get available menus
+            url = new URL("https://gestmans.000webhostapp.com/PHP/app/order/process_order.php");
+            returningData = getJSONWeb(url);
+
+            // Format the JSON received to String
+            returningData = formatJSONUniqueValueSuccess(returningData);
         } catch (IOException e) {
             e.printStackTrace();
             returningData = "error";
@@ -257,7 +278,20 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         }
     }
 
-    private static String formatJSONSimple(String data) {
+    private static String formatJSONUniqueValueSuccess(String data) {
+        try {
+            // Format the JSON to get the value of key success
+            JSONObject initialJo = new JSONObject(data);
+            Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS), initialJo.toString());
+            data = String.valueOf(initialJo.get("success"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return data;
+    }
+
+    private static String formatJSONUniqueArray(String data) {
         try {
             // Format the JSON to get a string of the different items, split by '-'
             JSONObject initialJo = new JSONObject(data);

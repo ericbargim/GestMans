@@ -66,6 +66,10 @@
     <string name="ORDER_DETAILS_DISMISS_MESSAGE">Are you sure you want to dismiss the order notes screen?</string>
     <string name="ORDER_DISHES">Dishes</string>
     <string name="ORDER_MENUS">Menus</string>
+    <string name="ORDER_CREATION_ERROR_SENDING_ORDER_MESSAGE">Error while sending the order</string>
+    <string name="ORDER_CREATION_ERROR_RECEIVED_ORDER_MESSAGE">Error while receiving the order</string>
+    <string name="ORDER_CREATION_ERROR_SENDING_BOOL_MESSAGE">Error while sending the availability</string>
+    <string name="ORDER_CREATION_ERROR_RECEIVED_BOOL_MESSAGE">Error while receiving the availability</string>
     <!--endregion-->
 
     <!--region PERMISSIONS_STRINGS-->
@@ -78,11 +82,12 @@
     <string name="QR_SCANNER_ACTIVITY">QR_SCANNER-ACTIVITY</string>
     <string name="FETCH_PHP_CLASS">FETCH_PHP-CLASS</string>
     <string name="HELPER_CLASS">HELPER-CLASS</string>
-    <string name="NEW_ORDER_TABLES_FRAGMENT">NEW_ORDER_SELECTION-FRAGMENT</string>
-    <string name="EDIT_ORDER_TABLES_FRAGMENT">EDIT_ORDER_SELECTION-FRAGMENT</string>
+    <string name="NEW_ORDER_TABLES_FRAGMENT">NEW_ORDER_TABLES-FRAGMENT</string>
+    <string name="EDIT_ORDER_TABLES_FRAGMENT">EDIT_ORDER_TABLES-FRAGMENT</string>
     <string name="NEW_ORDER_SELECTION_FRAGMENT">NEW_ORDER_SELECTION-FRAGMENT</string>
     <string name="EDIT_ORDER_SELECTION_FRAGMENT">EDIT_ORDER_SELECTION-FRAGMENT</string>
     <string name="LIST_VIEW_TICKET_ADAPTER_CLASS">LIST_VIEW_TICKET_ADAPTER-CLASS</string>
+    <string name="ORDER_MENU_DIALOG">ORDER_MENU-DIALOG</string>
     <!--endregion-->
 
     <!--region COMMON_STRINGS-->
@@ -96,6 +101,10 @@
     <string name="NEW_ORDER">New Order</string>
     <string name="EDIT_ORDER">Edit Order</string>
     <string name="LOG_OUT">Log Out</string>
+    <string name="HOLDER_NUM">000</string>
+    <string name="HOLDER_NAME">Name</string>
+    <string name="LOADING">Loading…</string>
+    <string name="ERROR">Error</string>
     <!--endregion-->
 
 </resources>

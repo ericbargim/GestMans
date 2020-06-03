@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/tvNameTicket"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="@string/HOLDER_NAME"
+        android:textColor="@color/purpleGradient"
+        android:textSize="15sp" />
+
+    <ImageButton
+        android:id="@+id/btnSubtractTicket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/ic_subtract"
+        android:backgroundTint="@color/purpleGradient" />
+
+    <TextView
+        android:id="@+id/tvQuantityTicket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/HOLDER_NUM"
+        android:textColor="@color/purpleGradient"
+        android:textSize="15sp" />
+
+    <ImageButton
+        android:id="@+id/btnAddTicket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/ic_add"
+        android:backgroundTint="@color/purpleGradient" />
+
+    <ImageButton
+        android:id="@+id/btnRemoveTicket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/ic_remove"
+        android:backgroundTint="@color/red" />
+</LinearLayout>

@@ -1,116 +1,106 @@
 package com.gestmans.Business.Objects;
 
-import android.os.Environment;
-
 import androidx.annotation.NonNull;
 
 public class Menu {
-    private String drinkId;
-    private String drinkName;
-    private String firstId;
-    private String firstName;
-    private String secondId;
-    private String secondName;
-    private String dessertId;
-    private String dessertName;
+    private String menuName;
+    private int menuQuantity;
+    private Dish dishDrink;
+    private Dish dishFirst;
+    private Dish dishSecond;
+    private Dish dishDessert;
 
     public Menu() {
 
     }
 
-    public Menu(String drinkId, String drinkName, String firstId, String firstName, String secondId, String secondName, String dessertId, String dessertName) {
-        this.drinkId = drinkId;
-        this.drinkName = drinkName;
-        this.firstId = firstId;
-        this.firstName = firstName;
-        this.secondId = secondId;
-        this.secondName = secondName;
-        this.dessertId = dessertId;
-        this.dessertName = dessertName;
+    public Menu(String menuName, int menuQuantity, Dish drink, Dish dishFirst, Dish second, Dish dessert) {
+        this.menuName = menuName;
+        this.menuQuantity = menuQuantity;
+        this.dishDrink = drink;
+        this.dishFirst = dishFirst;
+        this.dishSecond = second;
+        this.dishDessert = dessert;
     }
 
-    public String getDrinkId() {
-        return drinkId;
+    public String getMenuName() {
+        return menuName;
     }
 
-    public void setDrinkId(String drinkId) {
-        this.drinkId = drinkId;
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
     }
 
-    public String getDrinkName() {
-        return drinkName;
+    public int getMenuQuantity() {
+        return menuQuantity;
     }
 
-    public void setDrinkName(String drinkName) {
-        this.drinkName = drinkName;
+    public void setMenuQuantity(int menuQuantity) {
+        this.menuQuantity = menuQuantity;
     }
 
-    public String getFirstId() {
-        return firstId;
+    public Dish getDishDrink() {
+        return dishDrink;
     }
 
-    public void setFirstId(String firstId) {
-        this.firstId = firstId;
+    public void setDishDrink(Dish dishDrink) {
+        this.dishDrink = dishDrink;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Dish getDishFirst() {
+        return dishFirst;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setDishFirst(Dish dishFirst) {
+        this.dishFirst = dishFirst;
     }
 
-    public String getSecondId() {
-        return secondId;
+    public Dish getDishSecond() {
+        return dishSecond;
     }
 
-    public void setSecondId(String secondId) {
-        this.secondId = secondId;
+    public void setDishSecond(Dish dishSecond) {
+        this.dishSecond = dishSecond;
     }
 
-    public String getSecondName() {
-        return secondName;
+    public Dish getDishDessert() {
+        return dishDessert;
     }
 
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
+    public void setDishDessert(Dish dishDessert) {
+        this.dishDessert = dishDessert;
     }
 
-    public String getDessertId() {
-        return dessertId;
+    public void addToQuantity() {
+        this.menuQuantity++;
     }
 
-    public void setDessertId(String dessertId) {
-        this.dessertId = dessertId;
-    }
-
-    public String getDessertName() {
-        return dessertName;
-    }
-
-    public void setDessertName(String dessertName) {
-        this.dessertName = dessertName;
+    public void removeFromQuantity() {
+        if (this.menuQuantity > 1)
+            this.menuQuantity--;
     }
 
     @NonNull
     @Override
     public String toString() {
+        // toString all dishes of menu
         StringBuilder sb = new StringBuilder();
 
         sb.append("--- MENU ---").append("\n");
+        sb.append("Name: ").append(getMenuName()).append("\n");
+        sb.append("Quantity: ").append(getMenuQuantity()).append("\n");
         sb.append("- Drink -").append("\n");
-        sb.append("Name: ").append(getDrinkName()).append("\n");
-        sb.append("ID: ").append(getDrinkId()).append("\n");
+        sb.append("Name: ").append(getDishDrink().getName()).append("\n");
+        sb.append("ID: ").append(getDishDrink().getId()).append("\n");
         sb.append("- First -").append("\n");
-        sb.append("Name: ").append(getFirstName()).append("\n");
-        sb.append("ID: ").append(getFirstId()).append("\n");
+        sb.append("Name: ").append(getDishFirst().getName()).append("\n");
+        sb.append("ID: ").append(getDishFirst().getId()).append("\n");
         sb.append("- Second -").append("\n");
-        sb.append("Name: ").append(getSecondName()).append("\n");
-        sb.append("ID: ").append(getSecondId()).append("\n");
+        sb.append("Name: ").append(getDishSecond().getName()).append("\n");
+        sb.append("ID: ").append(getDishSecond().getId()).append("\n");
         sb.append("- Dessert -").append("\n");
-        sb.append("Name: ").append(getDessertName()).append("\n");
-        sb.append("ID: ").append(getDessertId()).append("\n");
+        sb.append("Name: ").append(getDishDessert().getName()).append("\n");
+        sb.append("ID: ").append(getDishDessert().getId()).append("\n");
 
         return sb.toString();
     }

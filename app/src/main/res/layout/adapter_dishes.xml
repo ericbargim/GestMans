@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/purpleGradient"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:padding="10dp"
-        android:text="name"/>
+        android:text="@string/HOLDER_NAME"/>
 </LinearLayout>
