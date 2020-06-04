@@ -16,6 +16,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.gestmans.Business.Exceptions.ErorRetrievingInfoException;
 import com.gestmans.Business.Utilities.App;
 import com.gestmans.Business.Utilities.DataClass;
 import com.gestmans.Business.Utilities.HelperClass;
@@ -152,18 +153,30 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY) + "Post QR login", "QR received: " + qr + ".");
 
             // Check if QR exist in DB
-            if (Integer.parseInt(new FetchDataPHP().execute("qr_code_exist", qr).get()) > 0) {
+            String qrRes = new FetchDataPHP().execute("qr_code_exist", qr).get();
+
+            // If returns error
+            if (qrRes.equals("error")) {
+                throw new ErorRetrievingInfoException("Error sending QR");
+            }
+
+            //
+            else if (Integer.parseInt(qrRes) > 0) {
                 Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY) + "Post QR login", "QR exist.");
                 DataClass.username = new FetchDataPHP().execute("get_name_lastname", qr).get();
                 mContext.startActivity(new Intent(App.getContext(), AppMainActivity.class));
+            }
 
-                // QR does not exist in DB
-            } else {
+            // QR does not exist in DB
+            else {
                 Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY) + "Post QR login", "QR does not exist.");
-                HelperClass.createDialogMessageSingle("Error", "QR does not exist", "OK", mContext);
+                HelperClass.createDialogMessageNeutral("Error", "QR does not exist", "OK", mContext);
             }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+        } catch (ErorRetrievingInfoException e) {
+            e.printStackTrace();
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

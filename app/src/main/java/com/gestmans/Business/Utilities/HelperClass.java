@@ -28,7 +28,7 @@ public class HelperClass {
     public static final String[] orderDishTypes = new String[]{"drink", "starter", "first", "second", "dessert"};
     public static final String[] orderMenuDishTypes = new String[]{"drink", "first", "second", "dessert"};
 
-    public static void createDialogMessageSingle(String title, String message, String buttonMessage, Context context) {
+    public static void createDialogMessageNeutral(String title, String message, String buttonMessage, Context context) {
         // Create the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
         builder.setTitle(title)

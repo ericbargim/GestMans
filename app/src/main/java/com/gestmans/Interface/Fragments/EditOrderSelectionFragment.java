@@ -73,10 +73,11 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
         adapterOrderDishes = new ListViewOrderDishesAdapter(getActivity(), new ArrayList<>());
         adapterOrderMenus = new ListViewOrderMenusAdapter(getActivity(), new ArrayList<>());
 
-        // Get the sent argument (table)
-        Bundle bundle = getArguments();
+        Bundle bundle;
         final String[] table = {null};
         try {
+            // Get the sent argument (table)
+            bundle = getArguments();
             if (bundle.getString("table") != null) {
                 table[0] = bundle.getString("table");
                 Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Table", table[0]);
@@ -115,7 +116,6 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
                 data[0] = new FetchDataPHP().execute("get_dish_type").get();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
-                throw new ErorRetrievingInfoException("Error retrieving dishes");
             }
 
             // Transform String to List and capitalize first letter
@@ -393,7 +393,7 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
                         if (data[0].equals("error")) {
                             // Show a dialog with an error sending message
                             Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Order", "Error sending the order.");
-                            HelperClass.createDialogMessageSingle(getString(R.string.ERROR),
+                            HelperClass.createDialogMessageNeutral(getString(R.string.ERROR),
                                     getString(R.string.ORDER_CREATION_ERROR_SENDING_ORDER_MESSAGE),
                                     getString(R.string.OK),
                                     getContext());
@@ -403,7 +403,7 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
                         else if (data[0].equals("0")) {
                             // Show a dialog with an error receiving message
                             Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Order", "Error receiving response from PHP.");
-                            HelperClass.createDialogMessageSingle(getString(R.string.ERROR),
+                            HelperClass.createDialogMessageNeutral(getString(R.string.ERROR),
                                     getString(R.string.ORDER_CREATION_ERROR_RECEIVED_ORDER_MESSAGE),
                                     getString(R.string.OK),
                                     getContext());
@@ -436,7 +436,7 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
 
             // When dismiss button is clicked
             btnDismiss.setOnClickListener(v -> dismissDialog());
-        } catch (ErorRetrievingInfoException | NullPointerException e) {
+        } catch (ErorRetrievingInfoException e) {
             Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "RetrievingException", e.getMessage());
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             getFragmentManager().popBackStack();

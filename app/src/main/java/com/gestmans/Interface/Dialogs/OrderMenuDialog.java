@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.gestmans.Business.Exceptions.ErorRetrievingInfoException;
 import com.gestmans.Business.Utilities.FetchDataPHP;
 import com.gestmans.Business.Objects.Dish;
 import com.gestmans.Business.Objects.Menu;
@@ -67,7 +69,10 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
 
             // Get the dishes of the selected menu
             String data = new FetchDataPHP().execute("get_dishes_menu", "menu", menuName).get();
-            Log.d(getString(R.string.ORDER_MENU_DIALOG) + "Received data", data);
+
+            if (data.equals("error")) {
+                throw new ErorRetrievingInfoException("Error getting dishes of menu");
+            }
 
             // Split the data string
             String[] allDishes = data.split("-");
@@ -78,9 +83,9 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
             List<Dish> alSeconds = new ArrayList<>();
             List<Dish> alDesserts = new ArrayList<>();
 
-            //TRANSFORMAR EN OBJETO Y TRATAR O VICEVERSA
-
+            // Loop the received dishes
             for (int i = 0; i < allDishes.length; i++) {
+                // Store the dish information on a Dish object
                 String actualDish = allDishes[i];
                 String[] actualDishParts = actualDish.split(",");
                 String dishName = actualDishParts[0];
@@ -88,6 +93,8 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
                 String dishType = actualDishParts[2];
                 Dish dishObject = new Dish(dishId, dishName, dishType, 1);
                 Log.d(getString(R.string.ORDER_MENU_DIALOG) + "Check dish creation", dishObject.toString());
+
+                // Depending on dishType, store the dish on it's List
                 switch (dishObject.getDishType()) {
                     case "drink":
                         alDrinks.add(dishObject);
@@ -124,6 +131,7 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
             adapterSpinnerDesserts.setDropDownViewResource(R.layout.spinner_text_dropdown);
             spDessert.setAdapter(adapterSpinnerDesserts);
 
+            // When Create menu is clicked
             btnCreateMenu.setOnClickListener(v -> {
                 // Get all the selected dishes
                 Dish drink = (Dish) spDrink.getSelectedItem();
@@ -140,6 +148,7 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
                 dialog.dismiss();
             });
 
+            // When back button is clicked
             dialog.setOnKeyListener((dialog, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     if (event.getAction() != KeyEvent.ACTION_DOWN)
@@ -151,9 +160,12 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
                 }
                 return true;
             });
-
         } catch (NullPointerException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
+        } catch (ErorRetrievingInfoException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
         }
         return dialog;
     }

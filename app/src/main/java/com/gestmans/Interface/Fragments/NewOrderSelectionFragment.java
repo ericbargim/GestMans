@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gestmans.Business.Adapters.ListViewOrderMenusAdapter;
+import com.gestmans.Business.Exceptions.ErorRetrievingInfoException;
 import com.gestmans.Business.Objects.Menu;
 import com.gestmans.Business.Utilities.DataClass;
 import com.gestmans.Business.Utilities.FetchDataPHP;
@@ -85,7 +85,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
             if (table[0] != null) {
                 tvTitle.setText(getString(R.string.NEW_ORDER_SELECTION_TITLE, table[0]));
             } else {
-                throw new NullPointerException();
+                throw new ErorRetrievingInfoException("Error retrieving the table");
             }
 
             // Get the multiple dish types
@@ -118,7 +118,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
 
             // If PHP returns 1
             else if (!data[0].equals("0")) {
-                HelperClass.createDialogMessageSingle(getString(R.string.WARNING), getString(R.string.ORDER_MESSAGE_BOOKING, data[0]), getString(R.string.OK), getContext());
+                HelperClass.createDialogMessageNeutral(getString(R.string.WARNING), getString(R.string.ORDER_MESSAGE_BOOKING, data[0]), getString(R.string.OK), getContext());
             }
 
             // When a spinner item is selected
@@ -389,7 +389,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                         if (data[0].equals("error")) {
                             // Show a dialog with an error sending message
                             Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Order", "Error sending the order.");
-                            HelperClass.createDialogMessageSingle(getString(R.string.ERROR),
+                            HelperClass.createDialogMessageNeutral(getString(R.string.ERROR),
                                     getString(R.string.ORDER_CREATION_ERROR_SENDING_ORDER_MESSAGE),
                                     getString(R.string.OK),
                                     getContext());
@@ -399,7 +399,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                         else if (data[0].equals("0")) {
                             // Show a dialog with an error receiving message
                             Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Order", "Error receiving response from PHP.");
-                            HelperClass.createDialogMessageSingle(getString(R.string.ERROR),
+                            HelperClass.createDialogMessageNeutral(getString(R.string.ERROR),
                                     getString(R.string.ORDER_CREATION_ERROR_RECEIVED_ORDER_MESSAGE),
                                     getString(R.string.OK),
                                     getContext());
@@ -434,6 +434,10 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
         } catch (NullPointerException ex) {
             Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Table", "Null table!!! Crash incoming!!!");
             Toast.makeText(getActivity(), "Error while retrieving the table", Toast.LENGTH_SHORT).show();
+            getFragmentManager().popBackStack();
+        } catch (ErorRetrievingInfoException e) {
+            Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "RetrievingException", e.getMessage());
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             getFragmentManager().popBackStack();
         }
         return fView;
