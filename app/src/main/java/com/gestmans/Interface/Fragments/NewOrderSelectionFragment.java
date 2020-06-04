@@ -1,6 +1,5 @@
 package com.gestmans.Interface.Fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -72,10 +71,11 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
         adapterOrderDishes = new ListViewOrderDishesAdapter(getActivity(), new ArrayList<>());
         adapterOrderMenus = new ListViewOrderMenusAdapter(getActivity(), new ArrayList<>());
 
-        // Get the sent argument (table)
-        Bundle bundle = getArguments();
+        Bundle bundle;
         final String[] table = {null};
         try {
+            // Get the sent argument (table)
+            bundle = getArguments();
             if (bundle.getString("table") != null) {
                 table[0] = bundle.getString("table");
                 Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Table", table[0]);
@@ -103,6 +103,23 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
             ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(getActivity(), R.layout.spinner_text_selected, listDishTypes);
             adapterSpinner.setDropDownViewResource(R.layout.spinner_text_dropdown);
             spDishType.setAdapter(adapterSpinner);
+
+            // Check if selected table has a booking by an hour and a half
+            try {
+                data[0] = new FetchDataPHP().execute("booking_alert", table[0].split(" ")[1]).get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // If an error occurs getting the PHP data
+            if (data[0].equals("error")) {
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+            }
+
+            // If PHP returns 1
+            else if (!data[0].equals("0")) {
+                HelperClass.createDialogMessageSingle(getString(R.string.WARNING), getString(R.string.ORDER_MESSAGE_BOOKING, data[0]), getString(R.string.OK), getContext());
+            }
 
             // When a spinner item is selected
             spDishType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -223,10 +240,9 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                     boolean isInArray = false;
                     Dish dish = (Dish) parent.getAdapter().getItem(position);
                     Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Dish selected", dish.toString());
-                    ListAdapter adapter = adapterOrderDishes;
                     try {
-                        for (int i = 0; i < adapter.getCount(); i++) {
-                            Dish adapterDish = (Dish) adapter.getItem(i);
+                        for (int i = 0; i < adapterOrderDishes.getCount(); i++) {
+                            Dish adapterDish = (Dish) adapterOrderDishes.getItem(i);
                             if (dish.getId().equals(adapterDish.getId())) {
                                 isInArray = true;
 
@@ -348,14 +364,13 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                             // Transform all menus to JSON and add it to the JSONObject "items"
                             jsonItems.put("menus", HelperClass.menusToJSON(adapterOrderMenus));
                             Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Menus", jsonItems.toString());
-
                         }
 
                         // If ListViewOrderMenus does not have items
                         else {
                             // Add the menu and the returning empty array
                             jsonItems.put("menus", HelperClass.emptyJSON());
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Menus", jsonItems.toString());
+                            Log.d(getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Menus", jsonItems.toString());
                         }
 
                         // Finally, create an "order" object with the created JSONArray
@@ -365,7 +380,7 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
 
                         try {
                             // Send the JSON to process the order
-                            data[0] = new FetchDataPHP().execute("process_order", returningJson).get();
+                            data[0] = new FetchDataPHP().execute("send_order", returningJson, "new").get();
                         } catch (ExecutionException | InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -412,13 +427,11 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                 else {
                     Toast.makeText(getActivity(), "Please, fill the order", Toast.LENGTH_SHORT).show();
                 }
-
             });
 
             // When dismiss button is clicked
             btnDismiss.setOnClickListener(v -> dismissDialog());
-        } catch (
-                NullPointerException ex) {
+        } catch (NullPointerException ex) {
             Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Table", "Null table!!! Crash incoming!!!");
             Toast.makeText(getActivity(), "Error while retrieving the table", Toast.LENGTH_SHORT).show();
             getFragmentManager().popBackStack();

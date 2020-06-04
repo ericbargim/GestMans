@@ -26,7 +26,7 @@ public class HelperClass {
     public static int CAMERA_PERMISSION = 1;
 
     public static final String[] orderDishTypes = new String[]{"drink", "starter", "first", "second", "dessert"};
-    private static final String[] orderMenuDishTypes = new String[]{"drink", "first", "second", "dessert"};
+    public static final String[] orderMenuDishTypes = new String[]{"drink", "first", "second", "dessert"};
 
     public static void createDialogMessageSingle(String title, String message, String buttonMessage, Context context) {
         // Create the dialog

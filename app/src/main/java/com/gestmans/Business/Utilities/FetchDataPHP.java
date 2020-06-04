@@ -51,8 +51,14 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             case "get_menus":
                 data = getMenus();
                 break;
-            case "process_order":
-                data = processOrder(type[1]);
+            case "send_order":
+                data = processOrder(type[1], type[2]);
+                break;
+            case "receive_order":
+                data = receiveOrder(type[1]);
+                break;
+            case "booking_alert":
+                data = bookingAlert(type[1]);
                 break;
         }
         Log.d(App.getContext().getString(R.string.FETCH_PHP_CLASS) + type[0], data);
@@ -216,16 +222,57 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         return returningData;
     }
 
-    private String processOrder(String json) {
+    private String processOrder(String json, String type) {
+        String returningData;
+        URL url = null;
+
+        try {
+            switch (type) {
+                case "send":
+                    // Go to the URL of PHP file to send order
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/app/order/new_order.php?json=" + json);
+                    break;
+                case "update":
+                    // Go to the URL of PHP file to update order
+                    url = new URL("https://gestmans.000webhostapp.com/PHP/app/order/update_order.php?json=" + json);
+                    break;
+            }
+            returningData = getJSONWeb(url);
+
+            // Format the JSON received to String
+            returningData = formatJSONUniqueValueSuccess(returningData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            returningData = "error";
+        }
+        return returningData;
+    }
+
+    private String receiveOrder(String table) {
         String returningData;
         URL url;
 
         try {
-            // Go to the URL of PHP file to get available menus
-            url = new URL("https://gestmans.000webhostapp.com/PHP/app/order/process_order.php?json=" + json);
+            // Go to the URL of PHP file to get
+            url = new URL("https://gestmans.000webhostapp.com/PHP/app/order/receive_order.php?table=" + table);
+            returningData = getJSONWeb(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+            returningData = "error";
+        }
+        return returningData;
+    }
+
+    private String bookingAlert(String numTable) {
+        String returningData;
+        URL url;
+
+        try {
+            // Go to the URL of PHP file to get the first name and last name of the given username
+            url = new URL("https://gestmans.000webhostapp.com/PHP/app/booking/notify_booking.php?table=" + numTable);
             returningData = getJSONWeb(url);
 
-            // Format the JSON received to String
+            // Format the JSON received to String and remove unnecessary characters
             returningData = formatJSONUniqueValueSuccess(returningData);
         } catch (IOException e) {
             e.printStackTrace();
