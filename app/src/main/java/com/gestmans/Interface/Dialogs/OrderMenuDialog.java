@@ -32,6 +32,7 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
     private Button btnCreateMenu;
     private AlertDialog dialog;
 
+    // Interface needed to send the menu back to the Fragment
     private OrderMenuDialog.OnMenuCreatedListener callback;
 
     @Override
@@ -48,20 +49,18 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        // Build and show the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialog);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_order_menu, null);
-        spDrink = view.findViewById(R.id.spDrinkMenu);
-        spFirst = view.findViewById(R.id.spFirstMenu);
-        spSecond = view.findViewById(R.id.spSecondMenu);
-        spDessert = view.findViewById(R.id.spDessertMenu);
-        btnCreateMenu = view.findViewById(R.id.btnCreateMenu);
         builder.setView(view)
                 .setTitle(getString(R.string.ORDER_MENU_CREATE_MENU));
         setCancelable(false);
-
         dialog = builder.create();
         dialog.show();
+
+        // Reference the elements from the XML layout
+        references(view);
 
         try {
             // Get the table sent by bundle
@@ -143,7 +142,7 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
                 Menu menu = new Menu(menuName, 1, drink, first, second, dessert);
                 Log.d(getString(R.string.ORDER_MENU_DIALOG) + "Menu created", menu.toString());
 
-                // Add the menu object to the ListViewMenu
+                // Add the menu object to the ListViewMenu, calling the interface
                 callback.onMenuCreatedSubmit(menu);
                 dialog.dismiss();
             });
@@ -170,6 +169,15 @@ public class OrderMenuDialog extends AppCompatDialogFragment {
         return dialog;
     }
 
+    private void references(View view) {
+        spDrink = view.findViewById(R.id.spDrinkMenu);
+        spFirst = view.findViewById(R.id.spFirstMenu);
+        spSecond = view.findViewById(R.id.spSecondMenu);
+        spDessert = view.findViewById(R.id.spDessertMenu);
+        btnCreateMenu = view.findViewById(R.id.btnCreateMenu);
+    }
+
+    // The interface calls the onMenuCreatedSubmit method on the Fragment
     public interface OnMenuCreatedListener {
         public void onMenuCreatedSubmit(Menu menu);
     }

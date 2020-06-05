@@ -35,13 +35,12 @@ public class EditOrderTablesFragment extends Fragment {
 
         // Reference the elements from the XML layout
         references(fView);
+
         List<String> al = new ArrayList<>();
         String json;
-
-        // Get the available room tables
         try {
+            // Get the available room tables
             json = new FetchDataPHP().execute("unavailable_room_tables").get();
-            json = "error";
 
             // Check if the returned values is not error
             if (!json.equals("error")) {
@@ -92,8 +91,6 @@ public class EditOrderTablesFragment extends Fragment {
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.adapter_tables, al);
             lvTables.setAdapter(arrayAdapter);
         }
-
-
         return fView;
     }
 

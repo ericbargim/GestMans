@@ -41,24 +41,24 @@ public class SpinnersMenuAdapter extends ArrayAdapter<Dish> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // I created a dynamic TextView here, but you can reference your own  custom layout for each spinner item
+        // Create a dynamic TextView getting the view, and change the color
         TextView tvName = (TextView) super.getView(position, convertView, parent);
         tvName.setTextColor(ContextCompat.getColor(App.getContext(), R.color.purpleGradient));
-        // Then you can get the current item using the values array (Users array) and the current position
-        // You can NOW reference each method you has created in your bean object (User class)
+
+        // Get the current item using the dishes array and the current position
         tvName.setText(dishes.get(position).getName());
 
-        // And finally return your dynamic (or custom) view for each spinner item
         return tvName;
     }
 
-    // And here is when the "chooser" is popped up
-    // Normally is the same view, but you can customize it if you want
     @Override
     public View getDropDownView(int position, View convertView,
                                 ViewGroup parent) {
+        // When the spinner is on "choose" mode, we use the same view
         TextView tvName = (TextView) super.getDropDownView(position, convertView, parent);
         tvName.setTextColor(ContextCompat.getColor(App.getContext(), R.color.purpleGradient));
+
+        // For each position of the spinner, set the name of the dishes respectively
         tvName.setText(dishes.get(position).getName());
 
         return tvName;

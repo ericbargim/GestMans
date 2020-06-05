@@ -26,25 +26,33 @@ public class OrderNotesDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        // Build and show the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialog);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_order_notes, null);
-        etOrderDetail = view.findViewById(R.id.etOrderDetail);
-        btnSaveOrderDetail = view.findViewById(R.id.btnSaveOrderDetail);
         builder.setView(view)
                 .setTitle(getString(R.string.ORDER_NOTES));
         setCancelable(false);
-
         dialog = builder.create();
         dialog.show();
+
+        // Reference the elements from the XML layout
+        references(view);
+
+        // If there are notes saved, show them
         if (DataClass.orderNotes != null) {
             etOrderDetail.setText(DataClass.orderNotes);
         }
+
+        // When save notes is clicked
         btnSaveOrderDetail.setOnClickListener(v -> {
             try {
+                // Check EditText is not empty
                 if (String.valueOf(etOrderDetail.getText()).equals("")) {
                     throw new NullPointerException();
                 }
+
+                // Save text from EditText and close the dialog
                 DataClass.orderNotes = String.valueOf(etOrderDetail.getText());
                 dialog.dismiss();
             } catch (NullPointerException e) {
@@ -53,6 +61,7 @@ public class OrderNotesDialog extends AppCompatDialogFragment {
 
         });
 
+        // When back button is clicked
         dialog.setOnKeyListener((dialog, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (event.getAction() != KeyEvent.ACTION_DOWN)
@@ -85,5 +94,8 @@ public class OrderNotesDialog extends AppCompatDialogFragment {
         dialog.show();
     }
 
-
+    private void references(View view) {
+        etOrderDetail = view.findViewById(R.id.etOrderDetail);
+        btnSaveOrderDetail = view.findViewById(R.id.btnSaveOrderDetail);
+    }
 }

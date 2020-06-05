@@ -131,6 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
         // When user clicks Login with QR button
         btnLoginQR.setOnClickListener(v -> {
             // If camera permission is already granted, open QR Scanner
@@ -196,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, getString(R.string.PERMISSION_GRANTED), Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), QRScannerActivity.class));
             } else {
-                Toast.makeText(LoginActivity.this, getString(R.string.PERMISSION_DENIED), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.PERMISSION_DENIED) + ".\n" + "Please, accept permission in order to log in via QR Code", Toast.LENGTH_LONG).show();
             }
         }
     }

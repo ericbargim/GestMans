@@ -70,7 +70,7 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         URL url = null;
 
         try {
-            // Go to the URL of PHP file to check if user exist, or user and password matches or qr code exist
+            // Go to the URL of PHP file to check if the username exist, username and password matches or qr code exist
             switch (type) {
                 case 0:
                     url = new URL("https://gestmans.000webhostapp.com/PHP/login/username_exists.php?user=" + data[1]);
@@ -192,7 +192,6 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
                     url = new URL("https://gestmans.000webhostapp.com/PHP/app/dishes/menu/get_id_name_with_menu_id.php?idmenu=" + dishTypeOrMenu);
                     break;
             }
-
             returningData = getJSONWeb(url);
 
             // Format the received JSON to String
@@ -229,11 +228,11 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         try {
             switch (type) {
                 case "send":
-                    // Go to the URL of PHP file to send order
+                    // Go to the URL of PHP file to send the order
                     url = new URL("https://gestmans.000webhostapp.com/PHP/app/order/new_order.php?json=" + json);
                     break;
                 case "update":
-                    // Go to the URL of PHP file to update order
+                    // Go to the URL of PHP file to update the order
                     url = new URL("https://gestmans.000webhostapp.com/PHP/app/order/update_order.php?json=" + json);
                     break;
             }
@@ -253,9 +252,11 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
         URL url;
 
         try {
-            // Go to the URL of PHP file to get
+            // Go to the URL of PHP file to receive the order
             url = new URL("https://gestmans.000webhostapp.com/PHP/app/order/receive_order.php?table=" + table);
             returningData = getJSONWeb(url);
+
+            // This time, the JSON is treated on the EditOrderSelectionFragment
         } catch (IOException e) {
             e.printStackTrace();
             returningData = "error";
@@ -272,7 +273,7 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
             url = new URL("https://gestmans.000webhostapp.com/PHP/app/booking/notify_booking.php?table=" + numTable);
             returningData = getJSONWeb(url);
 
-            // Format the JSON received to String and remove unnecessary characters
+            // Format the JSON received to String
             returningData = formatJSONUniqueValueSuccess(returningData);
         } catch (IOException e) {
             e.printStackTrace();

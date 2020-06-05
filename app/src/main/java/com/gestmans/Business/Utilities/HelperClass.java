@@ -214,6 +214,7 @@ public class HelperClass {
                 menuPartsJSON.put("quantity", menuQuantity);
                 Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Menu parts", menuPartsJSON.toString());
 
+                // Put the selected dishes of the menu
                 menuPartsJSON.put(orderMenuDishTypes[0], new JSONObject().put("id", actualMenu.getDishDrink().getId()));
                 Log.d(App.getContext().getString(R.string.HELPER_CLASS) + "Menu parts", menuPartsJSON.toString());
 

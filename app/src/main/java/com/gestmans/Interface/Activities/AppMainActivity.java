@@ -35,12 +35,7 @@ public class AppMainActivity extends AppCompatActivity {
                 } else {
                     this.doubleBackToExitPressedOnce = true;
                     Toast.makeText(this, getString(R.string.APP_MAIN_BACK_AGAIN), Toast.LENGTH_SHORT).show();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            doubleBackToExitPressedOnce = false;
-                        }
-                    }, 2000);
+                    new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
                 }
             } else {
                 super.onBackPressed();

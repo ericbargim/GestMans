@@ -48,12 +48,8 @@ public class ListViewOrderMenusAdapter extends ArrayAdapter<Menu> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_order_menus, parent, false);
         }
 
-        // Find references on XML
-        tvName = convertView.findViewById(R.id.tvNameTicket);
-        btnSubtract = convertView.findViewById(R.id.btnSubtractTicket);
-        tvQuantity = convertView.findViewById(R.id.tvQuantityTicket);
-        btnAdd = convertView.findViewById(R.id.btnAddTicket);
-        btnRemove = convertView.findViewById(R.id.btnRemoveTicket);
+        // Reference the elements from the XML layout
+        references(convertView);
 
         // Set text on the fields
         tvName.setText(menu.getMenuName());
@@ -66,7 +62,7 @@ public class ListViewOrderMenusAdapter extends ArrayAdapter<Menu> {
             // Build and show a quick menu info dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
             View view = (LayoutInflater.from(context)).inflate(R.layout.dialog_info_menu, null);
-            referencesPrompt(view);
+            referencesInfo(view);
             builder.setView(view)
                     .setCancelable(true);
             final AlertDialog dialog = builder.show();
@@ -128,7 +124,15 @@ public class ListViewOrderMenusAdapter extends ArrayAdapter<Menu> {
         return convertView;
     }
 
-    private void referencesPrompt(View view) {
+    private void references(@Nullable View convertView) {
+        tvName = convertView.findViewById(R.id.tvNameTicket);
+        btnSubtract = convertView.findViewById(R.id.btnSubtractTicket);
+        tvQuantity = convertView.findViewById(R.id.tvQuantityTicket);
+        btnAdd = convertView.findViewById(R.id.btnAddTicket);
+        btnRemove = convertView.findViewById(R.id.btnRemoveTicket);
+    }
+
+    private void referencesInfo(View view) {
         tvMenuNameInfo = view.findViewById(R.id.tvMenuNameContentInfo);
         tvMenuQuantityInfo = view.findViewById(R.id.tvMenuQuantityContentInfo);
         tvDishDrinkInfo = view.findViewById(R.id.tvDishDrinkContentInfo);

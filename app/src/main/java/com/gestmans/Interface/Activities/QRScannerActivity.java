@@ -3,9 +3,7 @@ package com.gestmans.Interface.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.os.Handler;
 
-import com.gestmans.Interface.Dialogs.LoadingDialog;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;

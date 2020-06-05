@@ -46,12 +46,8 @@ public class ListViewOrderDishesAdapter extends ArrayAdapter<Dish> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.adapter_order_dishes, parent, false);
         }
 
-        // Find references on XML
-        tvName = convertView.findViewById(R.id.tvNameTicket);
-        btnSubtract = convertView.findViewById(R.id.btnSubtractTicket);
-        tvQuantity = convertView.findViewById(R.id.tvQuantityTicket);
-        btnAdd = convertView.findViewById(R.id.btnAddTicket);
-        btnRemove = convertView.findViewById(R.id.btnRemoveTicket);
+        // Reference the elements from the XML layout
+        references(convertView);
 
         // Set text on the fields
         tvName.setText(dish.getName());
@@ -99,5 +95,13 @@ public class ListViewOrderDishesAdapter extends ArrayAdapter<Dish> {
         });
 
         return convertView;
+    }
+
+    private void references(@Nullable View convertView) {
+        tvName = convertView.findViewById(R.id.tvNameTicket);
+        btnSubtract = convertView.findViewById(R.id.btnSubtractTicket);
+        tvQuantity = convertView.findViewById(R.id.tvQuantityTicket);
+        btnAdd = convertView.findViewById(R.id.btnAddTicket);
+        btnRemove = convertView.findViewById(R.id.btnRemoveTicket);
     }
 }
