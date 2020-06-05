@@ -227,7 +227,7 @@ public class FetchDataPHP extends AsyncTask<String, String, String> {
 
         try {
             switch (type) {
-                case "send":
+                case "new":
                     // Go to the URL of PHP file to send the order
                     url = new URL("https://gestmans.000webhostapp.com/PHP/app/order/new_order.php?json=" + json);
                     break;
