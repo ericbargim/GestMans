@@ -87,7 +87,7 @@ public class ListViewOrderMenusAdapter extends ArrayAdapter<Menu> {
             notifyDataSetChanged();
         });
 
-        // Add subtract listener
+        // Subtract button listener
         btnSubtract.setOnClickListener(v -> {
             menu.removeFromQuantity();
             tvQuantity.setText(Integer.toString(menu.getMenuQuantity()));
