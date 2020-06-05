@@ -126,6 +126,23 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
             adapterSpinner.setDropDownViewResource(R.layout.spinner_text_dropdown);
             spDishType.setAdapter(adapterSpinner);
 
+            // Check if selected table has a booking by an hour and a half
+            try {
+                data[0] = new FetchDataPHP().execute("booking_alert", table[0].split(" ")[1]).get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // If an error occurs getting the PHP data
+            if (data[0].equals("error")) {
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+            }
+
+            // If PHP returns 1
+            else if (!data[0].equals("0")) {
+                HelperClass.createDialogMessageNeutral(getString(R.string.WARNING), getString(R.string.ORDER_MESSAGE_BOOKING, data[0]), getString(R.string.OK), getContext());
+            }
+
             // When a spinner item is selected
             spDishType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
