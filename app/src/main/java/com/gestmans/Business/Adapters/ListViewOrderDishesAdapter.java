@@ -53,21 +53,21 @@ public class ListViewOrderDishesAdapter extends ArrayAdapter<Dish> {
         tvName.setText(dish.getName());
         tvQuantity.setText(Integer.toString(dish.getQuantity()));
 
-        // Add button listener
+        // If add button is clicked
         btnAdd.setOnClickListener(v -> {
             dish.addToQuantity();
             tvQuantity.setText(Integer.toString(dish.getQuantity()));
             notifyDataSetChanged();
         });
 
-        // Add subtract listener
+        // If subtract button is clicked
         btnSubtract.setOnClickListener(v -> {
             dish.removeFromQuantity();
             tvQuantity.setText(Integer.toString(dish.getQuantity()));
             notifyDataSetChanged();
         });
 
-        // Add remove listener
+        // If remove button is clicked
         btnRemove.setOnClickListener(v -> {
             // Create dialog to confirm deleting the selected dish
             AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomAlertDialog);
