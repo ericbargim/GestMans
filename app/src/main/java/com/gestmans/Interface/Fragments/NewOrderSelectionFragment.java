@@ -387,20 +387,15 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
 
                         // If the returned value is error
                         if (data[0].equals("error")) {
-                            // Show a dialog with an error sending message
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Order", "Error sending the order.");
-                            HelperClass.createDialogMessageNeutral(getString(R.string.ERROR),
-                                    getString(R.string.ORDER_CREATION_ERROR_SENDING_ORDER_MESSAGE),
-                                    getString(R.string.OK),
-                                    getContext());
+                            throw new ErorRetrievingInfoException(getString(R.string.ORDER_CREATION_ERROR_SENDING_ORDER_MESSAGE));
                         }
 
                         // If the returned value is 0
                         else if (data[0].equals("0")) {
                             // Show a dialog with an error receiving message
-                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Order", "Error receiving response from PHP.");
+                            Log.d(getString(R.string.NEW_ORDER_SELECTION_FRAGMENT) + "Order", getString(R.string.ORDER_CREATION_ERROR_INSERTING_ORDER_MESSAGE));
                             HelperClass.createDialogMessageNeutral(getString(R.string.ERROR),
-                                    getString(R.string.ORDER_CREATION_ERROR_RECEIVED_ORDER_MESSAGE),
+                                    getString(R.string.ORDER_CREATION_ERROR_INSERTING_ORDER_MESSAGE),
                                     getString(R.string.OK),
                                     getContext());
                         }
@@ -420,6 +415,13 @@ public class NewOrderSelectionFragment extends Fragment implements IOnBackPresse
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    } catch (ErorRetrievingInfoException e) {
+                        // Show a dialog with an error sending message
+                        e.printStackTrace();
+                        HelperClass.createDialogMessageNeutral(getString(R.string.ERROR),
+                                e.getMessage(),
+                                getString(R.string.OK),
+                                getContext());
                     }
                 }
 

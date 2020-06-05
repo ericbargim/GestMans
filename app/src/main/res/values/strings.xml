@@ -75,7 +75,8 @@
     <string name="ORDER_DISHES">Dishes</string>
     <string name="ORDER_MENUS">Menus</string>
     <string name="ORDER_CREATION_ERROR_SENDING_ORDER_MESSAGE">Error while sending the order.</string>
-    <string name="ORDER_CREATION_ERROR_RECEIVED_ORDER_MESSAGE">Error while receiving the order.</string>
+    <string name="ORDER_CREATION_ERROR_INSERTING_ORDER_MESSAGE">Error while inserting the order.</string>
+    <string name="ORDER_CREATION_ERROR_UPDATING_ORDER_MESSAGE">Error while updating the order.</string>
     <string name="ORDER_MESSAGE_BOOKING">A booking is scheduled at this table at %s.</string>
     <!--endregion-->
 
