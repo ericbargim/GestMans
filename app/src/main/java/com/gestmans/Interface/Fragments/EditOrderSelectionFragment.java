@@ -468,7 +468,9 @@ public class EditOrderSelectionFragment extends Fragment implements IOnBackPress
             notes = orderJO.getString("notes");
             Log.d(App.getContext().getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Notes",
                     notes);
-            DataClass.orderNotes = notes;
+            if (!notes.equals("null")) {
+                DataClass.orderNotes = notes;
+            }
 
             // Get the dishes looping the possible dishes
             Log.d(App.getContext().getString(R.string.EDIT_ORDER_SELECTION_FRAGMENT) + "Dishes",
