@@ -77,13 +77,28 @@ public class LoginActivity extends AppCompatActivity {
                 String password = etPassword.getText().toString();
                 try {
                     // Check if username exist in DB
-                    if (Integer.parseInt(new FetchDataPHP().execute("username_exist", username).get()) > 0) {
+                    String loginRes = new FetchDataPHP().execute("username_exist", username).get();
+
+                    // If returns error
+                    if (loginRes.equals("error")) {
+                        throw new ErorRetrievingInfoException("Error sending login");
+                    }
+
+                    // If username exist in DB
+                    else if (Integer.parseInt(loginRes) > 0) {
                         // Username exist in DB
                         Log.d(getString(R.string.LOGIN_ACTIVITY) + "Check login", "Username exist. Checking password.");
 
                         // Check if password matches username in DB
-                        if (Integer.parseInt(new FetchDataPHP().execute("username_password_matches", username, password).get()) > 0) {
-                            // Password matches
+                        loginRes = new FetchDataPHP().execute("username_password_matches", username, password).get();
+
+                        // If returns error
+                        if (loginRes.equals("error")) {
+                            throw new ErorRetrievingInfoException("Error sending login");
+                        }
+
+                        // If password matches
+                        else if (Integer.parseInt(loginRes) > 0) {
                             Log.d(getString(R.string.LOGIN_ACTIVITY) + "Check login", "Password matches.");
 
                             // Save name and lastname
@@ -98,8 +113,10 @@ public class LoginActivity extends AppCompatActivity {
                             etLogin.setText("");
                             etPassword.setText("");
                             startActivity(new Intent(getApplicationContext(), AppMainActivity.class));
-                        } else {
-                            // Password does not match
+                        }
+
+                        // If password does not match
+                        else {
                             Log.d(getString(R.string.LOGIN_ACTIVITY) + "Check login", "Password does not match.");
 
                             // Select password TextInputEditText text
@@ -112,8 +129,10 @@ public class LoginActivity extends AppCompatActivity {
                             // Show keyboard
                             HelperClass.showKeyboard(this);
                         }
-                    } else {
-                        // Username does not exist in DB
+                    }
+
+                    // If username does not exist in DB
+                    else {
                         Log.d(getString(R.string.LOGIN_ACTIVITY) + "Check login", "Username does not exist.");
 
                         // Select login TextInputEditText text
@@ -128,6 +147,9 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
+                } catch (ErorRetrievingInfoException e) {
+                    e.printStackTrace();
+                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -161,14 +183,14 @@ public class LoginActivity extends AppCompatActivity {
                 throw new ErorRetrievingInfoException("Error sending QR");
             }
 
-            //
+            // If QR exist in DB
             else if (Integer.parseInt(qrRes) > 0) {
                 Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY) + "Post QR login", "QR exist.");
                 DataClass.username = new FetchDataPHP().execute("get_name_lastname", qr).get();
                 mContext.startActivity(new Intent(App.getContext(), AppMainActivity.class));
             }
 
-            // QR does not exist in DB
+            // If QR does not exist in DB
             else {
                 Log.d(App.getContext().getString(R.string.LOGIN_ACTIVITY) + "Post QR login", "QR does not exist.");
                 HelperClass.createDialogMessageNeutral("Error", "QR does not exist", "OK", mContext);
